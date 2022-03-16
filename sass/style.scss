@@ -1,0 +1,104 @@
+@import url(reset.scss);
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+$color-primary: #ff5959;
+$color-secondary: #676fa3;
+$color-tertiary: #cddeff;
+$color-quaternary: #eef2ff;
+
+$padding-base: 1rem;
+$margin-base: 1rem;
+
+$font-size: 16px;
+$font-family: 'Share Tech Mono';
+
+$border-radius: 1rem;
+
+@mixin button($font_family, $padding, $color) {
+  .button {
+    color: darken($color: $color, $amount: 40);
+    border: 1px solid $color;
+    background-color: $color;
+
+    padding: $padding;
+    font-family: $font_family;
+    font-weight: bolder;
+
+    &:hover {
+      border: 1px solid lighten($color: $color, $amount: 10);
+      background-color: lighten($color: $color, $amount: 10);
+    }
+
+    &:active {
+      border: 1px solid darken($color: $color, $amount: 5);
+      background-color: darken($color: $color, $amount: 5);
+    }
+  }
+}
+
+@mixin grid-btn($repeat) {
+  display: grid;
+  grid-template-columns: repeat($repeat, 1fr);
+}
+
+body {
+  font-family: $font-family;
+  font-size: $font-size;
+}
+
+.container {
+  background: $color-tertiary;
+  width: 100vw;
+  height: 100vh;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.content {
+  background-color: $color-quaternary;
+  padding: calc($padding-base * 2);
+  max-width: 400px;
+}
+
+.visor {
+  border: none;
+  background-color: $color-tertiary;
+  padding: $padding-base;
+
+  text-align: right;
+  color: darken($color: $color-tertiary, $amount: 50);
+  font-family: $font-family;
+  font-weight: bolder;
+  font-size: calc($font-size * 1);
+}
+
+.container-keyboard {
+  display: grid;
+  grid-template-areas:
+    'k_functionality k_operators'
+    'k_numbers k_operators';
+}
+
+.keyboard-numbers {
+  grid-area: k_numbers;
+
+  @include grid-btn(3);
+  @include button($font-family, $padding-base, $color-primary);
+}
+
+.keyboard-operators {
+  grid-area: k_operators;
+
+  @include grid-btn(1);
+  @include button($font-family, $padding-base, $color-secondary);
+}
+
+.keyboard-functionality {
+  grid-area: k_functionality;
+
+  @include grid-btn(3);
+  @include button($font-family, $padding-base, $color-secondary);
+}
