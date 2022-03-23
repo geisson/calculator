@@ -2,6 +2,7 @@ import '../sass/style.scss';
 
 const visorCurrentNumber = document.querySelector('[data-visor=current-number]') as HTMLDivElement;
 const visorAccumulator = document.querySelector('[data-visor=accumulator]') as HTMLDivElement;
+// eslint-disable-next-line no-undef
 const buttons = document.querySelectorAll('button') as NodeListOf<HTMLButtonElement>;
 
 visorCurrentNumber.innerHTML = '';
@@ -55,23 +56,61 @@ const handleKeyButton = (event: Event) => {
 
     elementsCalculateArray.push(parseFloat(previousNumber), operator);
 
-    const calculate = (arrayCalculate: Array<string | number>) => {
+    const calculation = (arrayCalculate: Array<string | number>) => {
       const number1 = arrayCalculate[0];
       const number2 = arrayCalculate[2];
       const signalOperator = arrayCalculate[1];
 
       const verificaNumero = typeof number1 === 'number' && typeof number2 === 'number';
+      const addition = signalOperator === '+' && verificaNumero;
+      const subtraction = signalOperator === '-' && verificaNumero;
+      const multiplication = signalOperator === '*' && verificaNumero;
+      const division = signalOperator === '/' && verificaNumero;
 
-      console.log(verificaNumero);
+      if (addition) {
+        const calculateSoma = number1 + number2;
+        visorCurrentNumber.innerHTML = `${calculateSoma}`;
+      }
 
-      if (signalOperator === '+' && verificaNumero) console.log(number1 + number2);
+      if (subtraction) {
+        const calculateSubtraction = number1 - number2;
+        visorCurrentNumber.innerHTML = `${calculateSubtraction}`;
+      }
 
-      console.log(arrayCalculate);
-      console.log(number1, number2, signalOperator);
+      if (multiplication) {
+        const calculateMultiplication = number1 * number2;
+        visorCurrentNumber.innerHTML = `${calculateMultiplication}`;
+      }
+
+      if (division) {
+        const calculateDivision = number1 / number2;
+        visorCurrentNumber.innerHTML = `${calculateDivision}`;
+      }
+
+      if (arrayCalculate.length >= 4) {
+        arrayCalculate.splice(0, 4);
+      }
+
+      console.log(`
+        numero1= ${number1}
+        numero2= ${number2},
+        operação = ${signalOperator}
+        array= ${arrayCalculate}`);
     };
-    calculate(elementsCalculateArray);
+    calculation(elementsCalculateArray);
   };
   if (keyOperator) handleOperation();
+
+  if (visorAccumulator.innerHTML.includes('=')) {
+    console.log('resultado final');
+    console.log(keyNumber);
+    console.log(keyButton);
+    const clickedNumber = document.querySelectorAll('[data-number]') as NodeListOf<HTMLButtonElement>;
+    clickedNumber.forEach((item) => item.addEventListener('click', () => {
+      visorCurrentNumber.innerHTML = '';
+      visorCurrentNumber.innerHTML = item.value;
+    }));
+  }
 };
 
 buttons.forEach((KeyButton) => KeyButton.addEventListener('click', handleKeyButton));
