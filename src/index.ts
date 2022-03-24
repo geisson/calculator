@@ -7,6 +7,7 @@ const keyOperators = document.querySelectorAll('[data-operator]') as NodeListOf<
 const keyComma = document.querySelector('[data-functionality=comma]') as HTMLButtonElement;
 const keyClearAll = document.querySelector('[data-functionality=clear-all]') as HTMLButtonElement;
 const keyClearElement = document.querySelector('[data-functionality=clear-element]') as HTMLButtonElement;
+const keyPlusMinus = document.querySelector('[data-functionality=plus-minus]') as HTMLButtonElement;
 
 visorCurrentNumber.innerHTML = '';
 visorAccumulator.innerHTML = '';
@@ -102,9 +103,18 @@ const handleKeyClearElement = () => {
   visorCurrentNumber.innerHTML = '';
 };
 
+const handleKeyPlusMinus = () => {
+  const isMinus = visorCurrentNumber.innerHTML.includes('-');
+  const addMinus = () => visorCurrentNumber.innerHTML = `-${visorCurrentNumber.innerHTML}`;
+  const removeMinus = () => visorCurrentNumber.innerHTML = `${visorCurrentNumber.innerHTML.replace('-', '')}`;
+
+  return isMinus ? removeMinus() : addMinus();
+};
+
 keyNumbers.forEach((numberButton) => numberButton.addEventListener('click', handleKeyNumber));
 keyOperators.forEach((keyOperator) => keyOperator.addEventListener('click', handleKeyOperator));
 keyComma.addEventListener('click', handleKeyComma);
 keyClearAll.addEventListener('click', handleKeyClearAll);
 keyClearElement.addEventListener('click', handleKeyClearElement);
+keyPlusMinus.addEventListener('click', handleKeyPlusMinus);
 // buttons.forEach((KeyButton) => KeyButton.addEventListener('click', handleKeyButton));
