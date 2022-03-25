@@ -9,15 +9,24 @@ const keyClearAll = document.querySelector('[data-functionality=clear-all]') as 
 const keyClearElement = document.querySelector('[data-functionality=clear-element]') as HTMLButtonElement;
 const keyPlusMinus = document.querySelector('[data-functionality=plus-minus]') as HTMLButtonElement;
 
-visorCurrentNumber.innerHTML = '';
+visorCurrentNumber.innerHTML = '0';
 visorAccumulator.innerHTML = '';
 const maximumDisplayNumber: number = 8;
 
-const elementsCalculateArray: Array<number| string> = [];
+const elementsCalculateArray: Array<number | string> = [];
 
 const handleKeyNumber = (event: Event) => {
   const keyNumber = event.target as HTMLButtonElement;
   const keyNumberValue = keyNumber.value;
+
+  if (visorCurrentNumber.innerHTML === '0') {
+    visorCurrentNumber.innerHTML = '';
+  }
+
+  if (visorAccumulator.innerHTML.includes('=')) {
+    visorCurrentNumber.innerHTML = '';
+    visorAccumulator.innerHTML = '';
+  }
 
   const addDisplayNumber = (number: string) => {
     const displaySize = visorCurrentNumber.innerHTML.length < maximumDisplayNumber;
@@ -56,21 +65,25 @@ const handleKeyOperator = (event:Event) => {
     if (addition) {
       const calculateSoma = number1 + number2;
       visorCurrentNumber.innerHTML = `${calculateSoma}`;
+      elementsCalculateArray.push(calculateSoma);
     }
 
     if (subtraction) {
       const calculateSubtraction = number1 - number2;
       visorCurrentNumber.innerHTML = `${calculateSubtraction}`;
+      elementsCalculateArray.push(calculateSubtraction);
     }
 
     if (multiplication) {
       const calculateMultiplication = number1 * number2;
       visorCurrentNumber.innerHTML = `${calculateMultiplication}`;
+      elementsCalculateArray.push(calculateMultiplication);
     }
 
     if (division) {
       const calculateDivision = number1 / number2;
       visorCurrentNumber.innerHTML = `${calculateDivision}`;
+      elementsCalculateArray.push(calculateDivision);
     }
 
     if (arrayCalculate.length >= 4) {
@@ -86,7 +99,13 @@ const handleKeyOperator = (event:Event) => {
   };
 
   calculation(elementsCalculateArray);
+
+  console.log(`dentro de keyOperator: ${elementsCalculateArray}`);
+  console.log(elementsCalculateArray);
 };
+
+console.log(`global: ${elementsCalculateArray}`);
+console.log(elementsCalculateArray);
 
 const handleKeyComma = () => {
   if (!visorCurrentNumber.innerHTML.includes('.')) {
