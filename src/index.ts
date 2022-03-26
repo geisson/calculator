@@ -63,6 +63,7 @@ const handleKeyOperator = (event:Event) => {
     const multiplication = signalOperator === '*' && verificaNumero;
     const division = signalOperator === '/' && verificaNumero;
     const percentage = signalOperator === '%' && verificaNumero;
+    const equal = signalOperator === '=' && verificaNumero;
 
     if (addition) {
       const calculateSoma = number1 + number2;
@@ -103,6 +104,11 @@ const handleKeyOperator = (event:Event) => {
       visorAccumulator.innerHTML = calculatePercentage + operator;
       visorCurrentNumber.innerHTML = `${calculatePercentage}`;
     }
+
+    if (equal) {
+      visorAccumulator.innerHTML = number1 + operator + number2;
+      // visorCurrentNumber.innerHTML = `${}`;
+    }
   };
 
   calculation(elementsCalculateArray);
@@ -122,7 +128,7 @@ const handleKeyComma = () => {
 
 const handleKeyClearAll = () => {
   visorAccumulator.innerHTML = '';
-  visorCurrentNumber.innerHTML = '';
+  visorCurrentNumber.innerHTML = '0';
 };
 
 const handleKeyClearElement = () => {

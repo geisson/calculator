@@ -17,7 +17,7 @@ mobile device to better understand basic functionality and edge cases.
 
 ## User Stories
 
--   [ ] User can see a display showing the current number entered or the
+-   [x] User can see a display showing the current number entered or the
 result of the last operation.
 --( O usuário pode ver um display mostrando o número atual inserido ou o resultado da última operação. )
 
@@ -32,7 +32,7 @@ digits in the entry pad. Entry of any digits more than 8 will be ignored.
 -- O usuário pode inserir números como sequências de até 8 dígitos clicando em
 dígitos no teclado de entrada. A entrada de qualquer dígito maior que 8 será ignorada.
 
--   [ ] User can click on an operation button to display the result of that
+-   [x] User can click on an operation button to display the result of that
 operation on:
 -- ( O usuário pode clicar em um botão de operação para exibir o resultado dessa
 operação em: )
@@ -48,7 +48,7 @@ updated to the value that preceded it.
 -- ( O usuário pode clicar no botão 'C' para limpar o último número ou o último
 Operação. Se a última entrada do usuário foi uma operação, o display será
 atualizado para o valor que o precedeu. )
--   [ ] User can click the 'AC' button to clear all internal work areas and
+-   [x] User can click the 'AC' button to clear all internal work areas and
 to set the display to 0.
 --( O usuário pode clicar no botão 'AC' para limpar todas as áreas de trabalho internas e
 para definir o visor para 0. )
