@@ -132,7 +132,16 @@ const handleKeyClearAll = () => {
 };
 
 const handleKeyClearElement = () => {
-  visorCurrentNumber.innerHTML = '';
+  const lastElement = elementsCalculateArray[elementsCalculateArray.length - 2];
+
+  if (visorCurrentNumber.innerHTML === '') {
+    elementsCalculateArray.pop();
+    visorCurrentNumber.innerHTML = `${lastElement}`;
+  } else {
+    visorCurrentNumber.innerHTML = '';
+  }
+  console.log('clearElement', elementsCalculateArray);
+  console.log(lastElement);
 };
 
 const handleKeyPlusMinus = () => {

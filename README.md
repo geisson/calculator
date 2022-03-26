@@ -42,7 +42,7 @@ operação em: )
     --( os dois últimos números inseridos OU )
     * the last number entered -- ( o último número digitado )
 
--   [ ] User can click the 'C' button to clear the last number or the last
+-   [x] User can click the 'C' button to clear the last number or the last
 operation. If the users last entry was an operation the display will be
 updated to the value that preceded it.
 -- ( O usuário pode clicar no botão 'C' para limpar o último número ou o último
