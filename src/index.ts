@@ -52,11 +52,12 @@ const handleKeyOperator = (event:Event) => {
   elementsCalculateArray.push(parseFloat(previousNumber), operator);
 
   const calculation = (arrayCalculate: Array<string | number>) => {
-    const number1 = arrayCalculate[0];
-    const number2 = arrayCalculate[2];
-    const signalOperator = arrayCalculate[1];
+    const number1 = arrayCalculate[arrayCalculate.length - 4];
+    const number2 = arrayCalculate[arrayCalculate.length - 2];
+    const signalOperator = arrayCalculate[arrayCalculate.length - 3];
 
     const verificaNumero = typeof number1 === 'number' && typeof number2 === 'number';
+
     const addition = signalOperator === '+' && verificaNumero;
     const subtraction = signalOperator === '-' && verificaNumero;
     const multiplication = signalOperator === '*' && verificaNumero;
@@ -65,37 +66,34 @@ const handleKeyOperator = (event:Event) => {
     if (addition) {
       const calculateSoma = number1 + number2;
       visorCurrentNumber.innerHTML = `${calculateSoma}`;
-      elementsCalculateArray.push(calculateSoma);
+      elementsCalculateArray.push(calculateSoma, operator);
+      visorAccumulator.innerHTML = calculateSoma + operator;
+      visorCurrentNumber.innerHTML = '';
     }
 
     if (subtraction) {
       const calculateSubtraction = number1 - number2;
       visorCurrentNumber.innerHTML = `${calculateSubtraction}`;
-      elementsCalculateArray.push(calculateSubtraction);
+      elementsCalculateArray.push(calculateSubtraction, operator);
+      visorAccumulator.innerHTML = calculateSubtraction + operator;
+      visorCurrentNumber.innerHTML = '';
     }
 
     if (multiplication) {
       const calculateMultiplication = number1 * number2;
       visorCurrentNumber.innerHTML = `${calculateMultiplication}`;
-      elementsCalculateArray.push(calculateMultiplication);
+      elementsCalculateArray.push(calculateMultiplication, operator);
+      visorAccumulator.innerHTML = calculateMultiplication + operator;
+      visorCurrentNumber.innerHTML = '';
     }
 
     if (division) {
       const calculateDivision = number1 / number2;
       visorCurrentNumber.innerHTML = `${calculateDivision}`;
-      elementsCalculateArray.push(calculateDivision);
+      elementsCalculateArray.push(calculateDivision, operator);
+      visorAccumulator.innerHTML = calculateDivision + operator;
+      visorCurrentNumber.innerHTML = '';
     }
-
-    if (arrayCalculate.length >= 4) {
-      arrayCalculate.splice(0, 4);
-    }
-
-    console.log(`
-        numero1= ${number1}
-        numero2= ${number2},
-        operação = ${signalOperator}
-        array= ${arrayCalculate}`);
-    console.log(arrayCalculate);
   };
 
   calculation(elementsCalculateArray);
