@@ -62,69 +62,35 @@ const handleKeyOperator = (event:Event) => {
   elementsCalculateArray.push(parseFloat(previousNumber), operator);
 
   const calculation = (arrayCalculate: Array<string | number>) => {
-    const number1 = arrayCalculate[arrayCalculate.length - 4];
-    const number2 = arrayCalculate[arrayCalculate.length - 2];
-    const signalOperator = arrayCalculate[arrayCalculate.length - 3];
+    const number1 = +arrayCalculate[arrayCalculate.length - 4];
+    const number2 = +arrayCalculate[arrayCalculate.length - 2];
+    const calcOperator: string = (arrayCalculate[arrayCalculate.length - 3]).toString();
 
-    const verificaNumero = typeof number1 === 'number' && typeof number2 === 'number';
+    const resultOperation = (operation:string, number01: number, number02: number):number => {
+      const addition = operation === '+';
+      const subtraction = operation === '-';
+      const multiplication = operation === '*';
+      const division = operation === '/';
+      const percentage = operation === '%';
+      let resultCalc:number = 0;
 
-    const addition = signalOperator === '+' && verificaNumero;
-    const subtraction = signalOperator === '-' && verificaNumero;
-    const multiplication = signalOperator === '*' && verificaNumero;
-    const division = signalOperator === '/' && verificaNumero;
-    const percentage = signalOperator === '%' && verificaNumero;
-    const equal = signalOperator === '=' && verificaNumero;
+      if (addition) { resultCalc = number01 + number02; }
+      if (subtraction) { resultCalc = number01 - number02; }
+      if (multiplication) { resultCalc = number01 * number02; }
+      if (division) { resultCalc = number01 / number02; }
+      if (percentage) { resultCalc = (number1 / 100) * number2; }
 
-    if (addition) {
-      const calculateSoma = number1 + number2;
-      visorCurrentNumber.innerHTML = `${calculateSoma}`;
-      elementsCalculateArray.push(calculateSoma, operator);
-      visorAccumulator.innerHTML = calculateSoma + operator;
-      visorCurrentNumber.innerHTML = '';
-    }
+      return resultCalc;
+    };
 
-    if (subtraction) {
-      const calculateSubtraction = number1 - number2;
-      visorCurrentNumber.innerHTML = `${calculateSubtraction}`;
-      elementsCalculateArray.push(calculateSubtraction, operator);
-      visorAccumulator.innerHTML = calculateSubtraction + operator;
-      visorCurrentNumber.innerHTML = '';
-    }
+    const result = resultOperation(calcOperator, number1, number2);
 
-    if (multiplication) {
-      const calculateMultiplication = number1 * number2;
-      visorCurrentNumber.innerHTML = `${calculateMultiplication}`;
-      elementsCalculateArray.push(calculateMultiplication, operator);
-      visorAccumulator.innerHTML = calculateMultiplication + operator;
-      visorCurrentNumber.innerHTML = '';
-    }
-
-    if (division) {
-      const calculateDivision = number1 / number2;
-      visorCurrentNumber.innerHTML = `${calculateDivision}`;
-      elementsCalculateArray.push(calculateDivision, operator);
-      visorAccumulator.innerHTML = calculateDivision + operator;
-      visorCurrentNumber.innerHTML = '';
-    }
-
-    if (percentage) {
-      const calculatePercentage = (number1 / 100) * number2;
-      visorCurrentNumber.innerHTML = `${calculatePercentage}`;
-      elementsCalculateArray.push(calculatePercentage, operator);
-      visorAccumulator.innerHTML = calculatePercentage + operator;
-      visorCurrentNumber.innerHTML = `${calculatePercentage}`;
-    }
-
-    if (equal) {
-      visorAccumulator.innerHTML = number1 + operator + number2;
-      // visorCurrentNumber.innerHTML = `${}`;
-    }
+    visorCurrentNumber.innerHTML = `${result}`;
+    elementsCalculateArray.push(result, operator);
+    visorAccumulator.innerHTML = result + operator;
+    visorCurrentNumber.innerHTML = '';
   };
-
   calculation(elementsCalculateArray);
-
-  console.log(`dentro de keyOperator: ${elementsCalculateArray}`);
-  console.log(elementsCalculateArray);
 };
 
 const handleKeyComma = () => {
