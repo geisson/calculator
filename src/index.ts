@@ -15,6 +15,11 @@ const maximumDisplayNumber: number = 8;
 
 const elementsCalculateArray: Array<number | string> = [];
 
+const roundNumber = (value:number, precision:number) => {
+  const multiplier = 10 ** (precision || 0);
+  return Math.round(value * multiplier) / multiplier;
+};
+
 const handleKeyNumber = (event: Event) => {
   const keyNumber = event.target as HTMLButtonElement;
   const keyNumberValue = keyNumber.value;
@@ -34,8 +39,13 @@ const handleKeyNumber = (event: Event) => {
     if (displaySize) {
       visorCurrentNumber.innerHTML += number;
     }
-  };
 
+    if (visorCurrentNumber.innerHTML.indexOf('.')) {
+      const currentNumber = +visorCurrentNumber.innerHTML;
+      const floatNumber = roundNumber(currentNumber, 3);
+      visorCurrentNumber.innerHTML = `${floatNumber}`;
+    }
+  };
   addDisplayNumber(keyNumberValue);
 };
 
@@ -116,9 +126,6 @@ const handleKeyOperator = (event:Event) => {
   console.log(`dentro de keyOperator: ${elementsCalculateArray}`);
   console.log(elementsCalculateArray);
 };
-
-console.log(`global: ${elementsCalculateArray}`);
-console.log(elementsCalculateArray);
 
 const handleKeyComma = () => {
   if (!visorCurrentNumber.innerHTML.includes('.')) {
