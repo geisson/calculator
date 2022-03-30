@@ -77,8 +77,6 @@ const showCalculation = (arrayCalculate: Array<string | number>, operator: strin
 
   const isNumber = (!Number.isNaN(number1) && !Number.isNaN(number2));
 
-  console.log(isNumber);
-
   if (isNumber) {
     const result = calculate(calcOperator, number1, number2);
     const resultRounded = roundNumber(result, 6);
@@ -131,17 +129,58 @@ const handleKeyClearAll = () => {
 };
 
 const handleKeyClearElement = () => {
-  const lastElement = elementsCalculateArray[elementsCalculateArray.length - 1];
-
   if (visorCurrentNumber.innerHTML === '') {
     elementsCalculateArray.pop();
+    const lastElement = elementsCalculateArray[elementsCalculateArray.length - 1];
+
     visorCurrentNumber.innerHTML = `${lastElement}`;
+    visorAccumulator.innerHTML = '';
+
+    if (elementsCalculateArray.length === 0) {
+      visorCurrentNumber.innerHTML = '';
+    }
   } else {
     visorCurrentNumber.innerHTML = '';
   }
-  console.log('clearElement', elementsCalculateArray);
-  console.log(lastElement);
+
+  if (visorAccumulator.innerHTML.includes('=')) {
+    visorCurrentNumber.innerHTML = '';
+    visorAccumulator.innerHTML = '';
+    elementsCalculateArray.length = 0;
+  }
 };
+
+// const handleKeyClearElement = () => {
+//   // const lastElement = elementsCalculateArray[elementsCalculateArray.length - 1];
+//   console.log('init clearElement', elementsCalculateArray);
+
+//   if (visorCurrentNumber.innerHTML === '') {
+//     elementsCalculateArray.pop();
+//     const lastElement = elementsCalculateArray[elementsCalculateArray.length - 1];
+
+//     console.log('antes inner html', lastElement);
+//     console.log('after pop() clearElement', elementsCalculateArray);
+
+//     visorCurrentNumber.innerHTML = 'lorem';
+//     visorAccumulator.innerHTML = '';
+
+//     console.log('depois inner html', lastElement);
+
+//     console.log('last pop() clearElement', elementsCalculateArray);
+//   } else {
+//     visorCurrentNumber.innerHTML = '';
+//   }
+//   console.log('fim clearElement', elementsCalculateArray);
+//   // console.log(lastElement);
+
+//   if (visorAccumulator.innerHTML.includes('=')) {
+//     visorCurrentNumber.innerHTML = '';
+//     visorAccumulator.innerHTML = '';
+//     elementsCalculateArray.length = 0;
+//   }
+
+//   visorCurrentNumber.innerHTML = '';
+// };
 
 const handleKeyPlusMinus = ():void => {
   const isMinus = visorCurrentNumber.innerHTML.includes('-');
