@@ -81,11 +81,12 @@ const showCalculation = (arrayCalculate: Array<string | number>, operator: strin
 
   if (isNumber) {
     const result = calculate(calcOperator, number1, number2);
+    const resultRounded = roundNumber(result, 6);
 
     elementsCalculateArray.length = 0;
-    elementsCalculateArray.push(result);
+    elementsCalculateArray.push(resultRounded);
 
-    visorCurrentNumber.innerHTML = result.toString();
+    visorCurrentNumber.innerHTML = resultRounded.toString();
 
     console.log(`
     result: ${result}
@@ -101,12 +102,6 @@ const showCalculation = (arrayCalculate: Array<string | number>, operator: strin
     console.log('tem uma sequencia');
     elementsCalculateArray.shift();
   }
-
-  // if (!isNaN(result)) { arrayCalculate.push(result); }
-
-  // elementsCalculateArray.push(result);
-  // visorAccumulator.innerHTML = result + calcOperator;
-  // visorCurrentNumber.innerHTML = '';
 
   console.log(arrayCalculate);
 };
@@ -136,7 +131,7 @@ const handleKeyClearAll = () => {
 };
 
 const handleKeyClearElement = () => {
-  const lastElement = elementsCalculateArray[elementsCalculateArray.length - 2];
+  const lastElement = elementsCalculateArray[elementsCalculateArray.length - 1];
 
   if (visorCurrentNumber.innerHTML === '') {
     elementsCalculateArray.pop();
