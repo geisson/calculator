@@ -52,7 +52,7 @@ atualizado para o valor que o precedeu. )
 to set the display to 0.
 --( O usuário pode clicar no botão 'AC' para limpar todas as áreas de trabalho internas e
 para definir o visor para 0. )
--   [ ] User can see 'ERR' displayed if any operation would exceed the
+-   [x] User can see 'ERR' displayed if any operation would exceed the
 8 digit maximum.
 -- ( O usuário pode ver 'ERR' exibido se qualquer operação exceder o
 máximo de 8 dígitos. )

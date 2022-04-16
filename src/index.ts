@@ -11,7 +11,7 @@ const keyPlusMinus = document.querySelector('[data-functionality=plus-minus]') a
 const keyEqual = document.querySelector('[data-result=equal]') as HTMLButtonElement;
 
 const maximumDisplayNumber:number = 8;
-const elementsCalculateArray:Array<number | string> = [];
+const elementsCalculateArray: Array<number | string> = [];
 
 visorCurrentNumber.innerHTML = '0';
 visorAccumulator.innerHTML = '';
@@ -37,72 +37,74 @@ const addDisplayNumber = (number: string):void => {
   addDisplayFloatNumber();
 };
 
+const updateArrayCalc = (arrayCalc:Array<string | number>, indexOperator:number, result:number) => {
+  arrayCalc.splice(indexOperator + 1, 1);
+  arrayCalc.splice(indexOperator - 1, 1);
+  arrayCalc.splice(indexOperator - 1, 1, result);
+};
+const numberBeforeOperator = (arrayCalculate:Array<string| number>, operator: number):number => +arrayCalculate[operator - 1];
+const numberAfterOperator = (arrayCalculate:Array<string| number>, operator: number): number => +arrayCalculate[operator + 1];
+
+const calculate = (arrayCalculate:Array<string| number>, indexOperator: number, operator:string) => {
+  const multiplication = operator === '*' ? numberBeforeOperator(arrayCalculate, indexOperator) * numberAfterOperator(arrayCalculate, indexOperator) : false;
+  const division = operator === '/' ? numberBeforeOperator(arrayCalculate, indexOperator) / numberAfterOperator(arrayCalculate, indexOperator) : false;
+  const addition = operator === '+' ? numberBeforeOperator(arrayCalculate, indexOperator) + numberAfterOperator(arrayCalculate, indexOperator) : false;
+  const subtraction = operator === '-' ? numberBeforeOperator(arrayCalculate, indexOperator) - numberAfterOperator(arrayCalculate, indexOperator) : false;
+  const percentage = operator === '%' ? (numberBeforeOperator(arrayCalculate, indexOperator) / 100) * numberAfterOperator(arrayCalculate, indexOperator) : false;
+
+  // const result = [
+  //   { '^': (a: number, b: number) => a ** b },
+  //   { '*': (a:number, b:number) => a * b, '/': (a:number, b:number) => a / b },
+  //   { '+': (a:number, b:number) => a + b, '-': (a:number, b:number) => a - b }];
+
+  const result = multiplication || division || addition || subtraction || percentage;
+
+  console.log(`calculo função = ${result}`);
+  console.log(arrayCalculate);
+
+  updateArrayCalc(arrayCalculate, indexOperator, +result);
+  showCalculation(arrayCalculate);
+};
+
 const handleKeyNumber = (event: Event) => {
   const keyNumber = event.target as HTMLButtonElement;
   const keyNumberValue:string = keyNumber.value;
 
-  // if (visorCurrentNumber.innerHTML === '0') { visorCurrentNumber.innerHTML = ''; }
-
-  console.log('tem sinal de = ?', visorAccumulator.innerHTML.includes('='));
-
   if (visorAccumulator.innerHTML.includes('=')) {
     visorCurrentNumber.innerHTML = '';
     visorAccumulator.innerHTML = '';
+    elementsCalculateArray.length = 0;
   }
 
   addDisplayNumber(keyNumberValue);
 };
 
-const calculate = (operation:string, number1: number, number2: number):number => {
-  const addition:boolean = operation === '+';
-  const subtraction:boolean = operation === '-';
-  const multiplication:boolean = operation === '*';
-  const division:boolean = operation === '/';
-  const percentage: boolean = operation === '%';
-  let resultCalc:number = 0;
+const showCalculation = (arrayCalculate: Array<string | number>) => {
+  const indexMultiplication = arrayCalculate.indexOf('*');
+  const indexDivision = arrayCalculate.indexOf('/');
+  const indexAddition = arrayCalculate.indexOf('+');
+  const indexSubtraction = arrayCalculate.indexOf('-');
+  const indexPercentage = arrayCalculate.indexOf('%');
 
-  if (addition) { resultCalc = number1 + number2; }
-  if (subtraction) { resultCalc = number1 - number2; }
-  if (multiplication) { resultCalc = number1 * number2; }
-  if (division) { resultCalc = number1 / number2; }
-  if (percentage) { resultCalc = (number1 / 100) * number2; }
-
-  return resultCalc;
-};
-
-const showCalculation = (arrayCalculate: Array<string | number>, operator: string) => {
-  const number1 = +arrayCalculate[0];
-  const number2 = +arrayCalculate[2];
-  const calcOperator = arrayCalculate[1].toString();
-
-  const isNumber = (!Number.isNaN(number1) && !Number.isNaN(number2));
-
-  if (isNumber) {
-    const result = calculate(calcOperator, number1, number2);
-    const resultRounded = roundNumber(result, 6);
-
-    elementsCalculateArray.length = 0;
-    elementsCalculateArray.push(resultRounded);
-
-    visorCurrentNumber.innerHTML = resultRounded.toString();
-
-    console.log(`
-    result: ${result}
-    number1: ${number1}
-    number2: ${number2}
-    calcOperator: ${calcOperator}
-    `);
+  if (arrayCalculate.includes('*') || arrayCalculate.includes('/')) {
+    arrayCalculate.includes('*') ? calculate(arrayCalculate, indexMultiplication, '*') : calculate(arrayCalculate, indexDivision, '/');
   }
 
-  const isSequenceNumbers = (typeof arrayCalculate[0] === 'number' && typeof arrayCalculate[1] === 'number');
-
-  if (isSequenceNumbers) {
-    console.log('tem uma sequencia');
-    elementsCalculateArray.shift();
+  if (arrayCalculate.includes('+') || arrayCalculate.includes('-')) {
+    arrayCalculate.includes('+') ? calculate(arrayCalculate, indexAddition, '+') : calculate(arrayCalculate, indexSubtraction, '-');
   }
 
-  console.log(arrayCalculate);
+  if (arrayCalculate.includes('%')) {
+    calculate(arrayCalculate, indexPercentage, '%');
+  }
 };
+
+const lorem2 = [3, '+', 3, '-', 6, '+', 4, '*', 3, '-', 7, '+', 89, '/', 5, '+', 4, '*', 5];
+
+console.log(lorem2);
+console.log(`correto = ${3 + 3 - 6 + 4 * 3 - 7 + 89 / 5 + 4 * 5}`); // 22,8
+showCalculation(lorem2);
+console.log(`resultado função = ${lorem2}`);
 
 const handleKeyOperator = (event:Event) => {
   const keyOperator = event.target as HTMLButtonElement;
@@ -111,12 +113,15 @@ const handleKeyOperator = (event:Event) => {
 
   if (previousNumber === '') return;
 
-  visorAccumulator.innerHTML = previousNumber + operator;
-  visorCurrentNumber.innerHTML = '';
+  if (visorAccumulator.innerHTML.includes('=')) {
+    elementsCalculateArray.length = 0;
+  }
 
   elementsCalculateArray.push(parseFloat(previousNumber), operator);
 
-  showCalculation(elementsCalculateArray, operator);
+  const showOperation:string = elementsCalculateArray.join('');
+  visorAccumulator.innerHTML = showOperation;
+  visorCurrentNumber.innerHTML = '';
 };
 
 const handleKeyComma = () => {
@@ -150,38 +155,6 @@ const handleKeyClearElement = () => {
   }
 };
 
-// const handleKeyClearElement = () => {
-//   // const lastElement = elementsCalculateArray[elementsCalculateArray.length - 1];
-//   console.log('init clearElement', elementsCalculateArray);
-
-//   if (visorCurrentNumber.innerHTML === '') {
-//     elementsCalculateArray.pop();
-//     const lastElement = elementsCalculateArray[elementsCalculateArray.length - 1];
-
-//     console.log('antes inner html', lastElement);
-//     console.log('after pop() clearElement', elementsCalculateArray);
-
-//     visorCurrentNumber.innerHTML = 'lorem';
-//     visorAccumulator.innerHTML = '';
-
-//     console.log('depois inner html', lastElement);
-
-//     console.log('last pop() clearElement', elementsCalculateArray);
-//   } else {
-//     visorCurrentNumber.innerHTML = '';
-//   }
-//   console.log('fim clearElement', elementsCalculateArray);
-//   // console.log(lastElement);
-
-//   if (visorAccumulator.innerHTML.includes('=')) {
-//     visorCurrentNumber.innerHTML = '';
-//     visorAccumulator.innerHTML = '';
-//     elementsCalculateArray.length = 0;
-//   }
-
-//   visorCurrentNumber.innerHTML = '';
-// };
-
 const handleKeyPlusMinus = ():void => {
   const isMinus = visorCurrentNumber.innerHTML.includes('-');
   const addMinus = ():void => { visorCurrentNumber.innerHTML = `-${visorCurrentNumber.innerHTML}`; };
@@ -190,9 +163,36 @@ const handleKeyPlusMinus = ():void => {
   return isMinus ? removeMinus() : addMinus();
 };
 
-// const handleKeyEqual = () => {
-//   console.log('é igual a');
-// };
+const handleKeyEqual = () => {
+  const previousNumber = visorCurrentNumber.innerHTML;
+
+  if (previousNumber !== '') {
+    elementsCalculateArray.push(parseFloat(previousNumber));
+  }
+
+  const lastItem = elementsCalculateArray[elementsCalculateArray.length - 1];
+  const isNumber = typeof lastItem === 'number';
+
+  if (!isNumber) {
+    elementsCalculateArray.pop();
+  }
+
+  const showArithmeticOperation = `${elementsCalculateArray.join('')}=`;
+  visorAccumulator.innerHTML = showArithmeticOperation;
+
+  console.log(lastItem);
+  console.log(isNumber);
+
+  console.log('array de key equal= ', elementsCalculateArray);
+
+  showCalculation(elementsCalculateArray);
+
+  console.log(elementsCalculateArray);
+
+  visorCurrentNumber.innerHTML = `${elementsCalculateArray}`;
+
+  // showCalculation(elementsCalculateArray);
+};
 
 keyNumbers.forEach((numberButton) => numberButton.addEventListener('click', handleKeyNumber));
 keyOperators.forEach((keyOperator) => keyOperator.addEventListener('click', handleKeyOperator));
@@ -200,5 +200,5 @@ keyComma.addEventListener('click', handleKeyComma);
 keyClearAll.addEventListener('click', handleKeyClearAll);
 keyClearElement.addEventListener('click', handleKeyClearElement);
 keyPlusMinus.addEventListener('click', handleKeyPlusMinus);
-// keyEqual.addEventListener('click', handleKeyEqual);
+keyEqual.addEventListener('click', handleKeyEqual);
 // buttons.forEach((KeyButton) => KeyButton.addEventListener('click', handleKeyButton));
