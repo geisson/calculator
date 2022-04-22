@@ -37,35 +37,6 @@ const addDisplayNumber = (number: string):void => {
   addDisplayFloatNumber();
 };
 
-const updateArrayCalc = (arrayCalc:Array<string | number>, indexOperator:number, result:number) => {
-  arrayCalc.splice(indexOperator + 1, 1);
-  arrayCalc.splice(indexOperator - 1, 1);
-  arrayCalc.splice(indexOperator - 1, 1, result);
-};
-const numberBeforeOperator = (arrayCalculate:Array<string| number>, operator: number):number => +arrayCalculate[operator - 1];
-const numberAfterOperator = (arrayCalculate:Array<string| number>, operator: number): number => +arrayCalculate[operator + 1];
-
-const calculate = (arrayCalculate:Array<string| number>, indexOperator: number, operator:string) => {
-  const multiplication = operator === '*' ? numberBeforeOperator(arrayCalculate, indexOperator) * numberAfterOperator(arrayCalculate, indexOperator) : false;
-  const division = operator === '/' ? numberBeforeOperator(arrayCalculate, indexOperator) / numberAfterOperator(arrayCalculate, indexOperator) : false;
-  const addition = operator === '+' ? numberBeforeOperator(arrayCalculate, indexOperator) + numberAfterOperator(arrayCalculate, indexOperator) : false;
-  const subtraction = operator === '-' ? numberBeforeOperator(arrayCalculate, indexOperator) - numberAfterOperator(arrayCalculate, indexOperator) : false;
-  const percentage = operator === '%' ? (numberBeforeOperator(arrayCalculate, indexOperator) / 100) * numberAfterOperator(arrayCalculate, indexOperator) : false;
-
-  // const result = [
-  //   { '^': (a: number, b: number) => a ** b },
-  //   { '*': (a:number, b:number) => a * b, '/': (a:number, b:number) => a / b },
-  //   { '+': (a:number, b:number) => a + b, '-': (a:number, b:number) => a - b }];
-
-  const result = multiplication || division || addition || subtraction || percentage;
-
-  console.log(`calculo função = ${result}`);
-  console.log(arrayCalculate);
-
-  updateArrayCalc(arrayCalculate, indexOperator, +result);
-  showCalculation(arrayCalculate);
-};
-
 const handleKeyNumber = (event: Event) => {
   const keyNumber = event.target as HTMLButtonElement;
   const keyNumberValue:string = keyNumber.value;
@@ -79,32 +50,95 @@ const handleKeyNumber = (event: Event) => {
   addDisplayNumber(keyNumberValue);
 };
 
-const showCalculation = (arrayCalculate: Array<string | number>) => {
-  const indexMultiplication = arrayCalculate.indexOf('*');
-  const indexDivision = arrayCalculate.indexOf('/');
-  const indexAddition = arrayCalculate.indexOf('+');
-  const indexSubtraction = arrayCalculate.indexOf('-');
-  const indexPercentage = arrayCalculate.indexOf('%');
+const updateCalculusArray = (array:Array<string | number>, index:number, result:number) => {
+  array.splice(index + 1, 1);
+  array.splice(index - 1, 1);
+  array.splice(index - 1, 1, result);
+};
 
-  if (arrayCalculate.includes('*') || arrayCalculate.includes('/')) {
-    arrayCalculate.includes('*') ? calculate(arrayCalculate, indexMultiplication, '*') : calculate(arrayCalculate, indexDivision, '/');
+const calculate = (operationSignal:string, previousNumber:number, nextNumber:number):number => {
+  const calculateMultiplication = +previousNumber * +nextNumber;
+  const calculateDivision = +previousNumber / +nextNumber;
+  const calculateAddition = +previousNumber + +nextNumber;
+  const calculateSubtraction = +previousNumber - +nextNumber;
+  const calculatePercentage = (previousNumber / 100) * nextNumber;
+
+  if (operationSignal === '*') return calculateMultiplication;
+  if (operationSignal === '/') return calculateDivision;
+  if (operationSignal === '+') return calculateAddition;
+  if (operationSignal === '-') return calculateSubtraction;
+  if (operationSignal === '%') return calculatePercentage;
+
+  throw new Error("Shouldn't be reachable");
+};
+
+const calculateOrder = (element: (string | number), index: number, array: Array<string | number>) => {
+  const previousElement = +array[index - 1];
+  const nextElement = +array[index + 1];
+
+  const firstOrder = element === '*' || element === '/';
+  const secondOrder = element === '+' || element === '-';
+  const percentage = element === '%';
+
+  if (firstOrder) {
+    console.log('--- INICIO PRIMEIRA ORDEM -------------------------');
+
+    const result = calculate(element, previousElement, nextElement);
+
+    console.log(`operação (${index}): ${previousElement} ${element} ${nextElement} = ${result}`);
+
+    updateCalculusArray(array, index, result);
+
+    console.log(array);
+    console.log('--- FIM PRIMEIRA ORDEM -------------------------');
   }
 
-  if (arrayCalculate.includes('+') || arrayCalculate.includes('-')) {
-    arrayCalculate.includes('+') ? calculate(arrayCalculate, indexAddition, '+') : calculate(arrayCalculate, indexSubtraction, '-');
+  if (secondOrder) {
+    console.log('--- INICIO SEGUNDA ORDEM -------------------------');
+
+    const result = calculate(element, previousElement, nextElement);
+
+    console.log(`operação (${index}): ${previousElement} ${element} ${nextElement} = ${result}`);
+
+    updateCalculusArray(array, index, result);
+
+    console.log(array);
+
+    console.log(`--- FIM SEGUNDA ORDEM -------------------------
+
+    `);
   }
 
-  if (arrayCalculate.includes('%')) {
-    calculate(arrayCalculate, indexPercentage, '%');
+  if (percentage) {
+    const result = calculate(element, previousElement, nextElement);
+    updateCalculusArray(array, index, result);
   }
 };
 
-const lorem2 = [3, '+', 3, '-', 6, '+', 4, '*', 3, '-', 7, '+', 89, '/', 5, '+', 4, '*', 5];
+const calculateExpressionArray = (array: Array<string | number>) => {
+  const firstOrderSignal = array.find((element) => element === '*' || element === '/');
+  const secondOrderSignal = array.find((element) => element === '+' || element === '-');
+  const percentSign = array.find(((element) => element === '%'));
 
-console.log(lorem2);
-console.log(`correto = ${3 + 3 - 6 + 4 * 3 - 7 + 89 / 5 + 4 * 5}`); // 22,8
-showCalculation(lorem2);
-console.log(`resultado função = ${lorem2}`);
+  console.log(`first order = ${firstOrderSignal}`);
+  console.log(`second order = ${secondOrderSignal}`);
+
+  const operationSignal = firstOrderSignal || secondOrderSignal || percentSign;
+  const indexSign = (operationSignal) ? array.indexOf(operationSignal) : '';
+
+  console.log(array);
+
+  if (operationSignal && indexSign) {
+    calculateOrder(operationSignal, indexSign, array);
+    calculateExpressionArray(array);
+  }
+};
+
+const percentagem = [10, '%', 30];
+const lore = [1, '+', 2, '-', 3, '*', 4, '+', 5, '/', 6, '-', 7, '*', 8, '+', 9, '/', 10];
+console.log(lore);
+calculateExpressionArray(lore);
+console.log(lore);
 
 const handleKeyOperator = (event:Event) => {
   const keyOperator = event.target as HTMLButtonElement;
@@ -185,7 +219,7 @@ const handleKeyEqual = () => {
 
   console.log('array de key equal= ', elementsCalculateArray);
 
-  showCalculation(elementsCalculateArray);
+  // showCalculation(elementsCalculateArray);
 
   console.log(elementsCalculateArray);
 
