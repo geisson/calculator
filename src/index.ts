@@ -50,91 +50,80 @@ const handleKeyNumber = (event: Event) => {
   addDisplayNumber(keyNumberValue);
 };
 
-const updateCalculusArray = (array:Array<string | number>, index:number, result:number) => {
-  array.splice(index + 1, 1);
-  array.splice(index - 1, 1);
-  array.splice(index - 1, 1, result);
+const updateCalculusArray = (
+  array: Array<string | number>,
+  indexArithmeticOperator: number,
+  result: number,
+) => {
+  array.splice(indexArithmeticOperator + 1, 1);
+  array.splice(indexArithmeticOperator - 1, 1);
+  array.splice(indexArithmeticOperator - 1, 1, result);
 };
 
-const calculate = (operationSignal:string, previousNumber:number, nextNumber:number):number => {
+const calculate = (arithmeticOperator:string, previousNumber:number, nextNumber:number):number => {
   const calculateMultiplication = +previousNumber * +nextNumber;
   const calculateDivision = +previousNumber / +nextNumber;
   const calculateAddition = +previousNumber + +nextNumber;
   const calculateSubtraction = +previousNumber - +nextNumber;
   const calculatePercentage = (previousNumber / 100) * nextNumber;
 
-  if (operationSignal === '*') return calculateMultiplication;
-  if (operationSignal === '/') return calculateDivision;
-  if (operationSignal === '+') return calculateAddition;
-  if (operationSignal === '-') return calculateSubtraction;
-  if (operationSignal === '%') return calculatePercentage;
+  if (arithmeticOperator === '*') return calculateMultiplication;
+  if (arithmeticOperator === '/') return calculateDivision;
+  if (arithmeticOperator === '+') return calculateAddition;
+  if (arithmeticOperator === '-') return calculateSubtraction;
+  if (arithmeticOperator === '%') return calculatePercentage;
 
   throw new Error("Shouldn't be reachable");
 };
 
-const calculateOrder = (element: (string | number), index: number, array: Array<string | number>) => {
-  const previousElement = +array[index - 1];
-  const nextElement = +array[index + 1];
+const calculateOrder = (
+  arithmeticOperator: (string | number),
+  indexArithmeticOperator: number,
+  array: Array<string | number>,
+) => {
+  const previousNumber = +array[indexArithmeticOperator - 1];
+  const nextNumber = +array[indexArithmeticOperator + 1];
 
-  const firstOrder = element === '*' || element === '/';
-  const secondOrder = element === '+' || element === '-';
-  const percentage = element === '%';
+  const firstOrder = arithmeticOperator === '*' || arithmeticOperator === '/';
+  const secondOrder = arithmeticOperator === '+' || arithmeticOperator === '-';
+  const percentage = arithmeticOperator === '%';
 
   if (firstOrder) {
-    console.log('--- INICIO PRIMEIRA ORDEM -------------------------');
-
-    const result = calculate(element, previousElement, nextElement);
-
-    console.log(`operação (${index}): ${previousElement} ${element} ${nextElement} = ${result}`);
-
-    updateCalculusArray(array, index, result);
-
-    console.log(array);
-    console.log('--- FIM PRIMEIRA ORDEM -------------------------');
+    const result = calculate(arithmeticOperator, previousNumber, nextNumber);
+    updateCalculusArray(array, indexArithmeticOperator, result);
   }
 
   if (secondOrder) {
-    console.log('--- INICIO SEGUNDA ORDEM -------------------------');
-
-    const result = calculate(element, previousElement, nextElement);
-
-    console.log(`operação (${index}): ${previousElement} ${element} ${nextElement} = ${result}`);
-
-    updateCalculusArray(array, index, result);
-
-    console.log(array);
-
-    console.log(`--- FIM SEGUNDA ORDEM -------------------------
-
-    `);
+    const result = calculate(arithmeticOperator, previousNumber, nextNumber);
+    updateCalculusArray(array, indexArithmeticOperator, result);
   }
-
   if (percentage) {
-    const result = calculate(element, previousElement, nextElement);
-    updateCalculusArray(array, index, result);
+    const result = calculate(arithmeticOperator, previousNumber, nextNumber);
+    updateCalculusArray(array, indexArithmeticOperator, result);
   }
 };
 
+const orderArithmeticOperators = (array: Array<string | number>) => {
+  const firstOrderArithmeticOperators = array.find((arithmeticOperator) => arithmeticOperator === '*' || arithmeticOperator === '/');
+
+  const secondOrderArithmeticOperators = array.find((arithmeticOperator) => arithmeticOperator === '+' || arithmeticOperator === '-');
+
+  const percentageArithmeticOperator = array.find(((arithmeticOperator) => arithmeticOperator === '%'));
+
+  return firstOrderArithmeticOperators
+    || secondOrderArithmeticOperators || percentageArithmeticOperator;
+};
+
 const calculateExpressionArray = (array: Array<string | number>) => {
-  const firstOrderSignal = array.find((element) => element === '*' || element === '/');
-  const secondOrderSignal = array.find((element) => element === '+' || element === '-');
-  const percentSign = array.find(((element) => element === '%'));
+  const arithmeticOperatorCurrent = orderArithmeticOperators(array);
+  const indexArithmeticOperatorCurrent = (arithmeticOperatorCurrent) ? array.indexOf(arithmeticOperatorCurrent) : '';
 
-  console.log(`first order = ${firstOrderSignal}`);
-  console.log(`second order = ${secondOrderSignal}`);
-
-  const operationSignal = firstOrderSignal || secondOrderSignal || percentSign;
-  const indexSign = (operationSignal) ? array.indexOf(operationSignal) : '';
-
-  console.log(array);
-
-  if (operationSignal && indexSign) {
-    calculateOrder(operationSignal, indexSign, array);
+  if (arithmeticOperatorCurrent && indexArithmeticOperatorCurrent) {
+    calculateOrder(arithmeticOperatorCurrent, indexArithmeticOperatorCurrent, array);
     calculateExpressionArray(array);
   }
 };
 
-const percentagem = [10, '%', 30];
 const lore = [1, '+', 2, '-', 3, '*', 4, '+', 5, '/', 6, '-', 7, '*', 8, '+', 9, '/', 10];
 console.log(lore);
 calculateExpressionArray(lore);
