@@ -122,12 +122,9 @@ const calculateExpressionArray = (array: Array<string | number>) => {
     calculateOrder(arithmeticOperatorCurrent, indexArithmeticOperatorCurrent, array);
     calculateExpressionArray(array);
   }
-};
 
-const lore = [1, '+', 2, '-', 3, '*', 4, '+', 5, '/', 6, '-', 7, '*', 8, '+', 9, '/', 10];
-console.log(lore);
-calculateExpressionArray(lore);
-console.log(lore);
+  return array;
+};
 
 const handleKeyOperator = (event:Event) => {
   const keyOperator = event.target as HTMLButtonElement;
@@ -203,18 +200,15 @@ const handleKeyEqual = () => {
   const showArithmeticOperation = `${elementsCalculateArray.join('')}=`;
   visorAccumulator.innerHTML = showArithmeticOperation;
 
-  console.log(lastItem);
-  console.log(isNumber);
+  const result = roundNumber(+calculateExpressionArray(elementsCalculateArray).join(), 2);
 
-  console.log('array de key equal= ', elementsCalculateArray);
+  console.log(result.toString().length);
 
-  // showCalculation(elementsCalculateArray);
-
-  console.log(elementsCalculateArray);
-
-  visorCurrentNumber.innerHTML = `${elementsCalculateArray}`;
-
-  // showCalculation(elementsCalculateArray);
+  if (result.toString().length > maximumDisplayNumber) {
+    visorCurrentNumber.innerHTML = 'ERROR';
+  } else {
+    visorCurrentNumber.innerHTML = `${result}`;
+  }
 };
 
 keyNumbers.forEach((numberButton) => numberButton.addEventListener('click', handleKeyNumber));
@@ -224,4 +218,3 @@ keyClearAll.addEventListener('click', handleKeyClearAll);
 keyClearElement.addEventListener('click', handleKeyClearElement);
 keyPlusMinus.addEventListener('click', handleKeyPlusMinus);
 keyEqual.addEventListener('click', handleKeyEqual);
-// buttons.forEach((KeyButton) => KeyButton.addEventListener('click', handleKeyButton));
