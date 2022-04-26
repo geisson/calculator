@@ -1,7 +1,7 @@
 import '../sass/style.scss';
 
-const visorCurrentNumber = document.querySelector('[data-visor=current-number]') as HTMLDivElement;
-const visorAccumulator = document.querySelector('[data-visor=accumulator]') as HTMLDivElement;
+const currentNumberDisplay = document.querySelector('[data-visor=current-number]') as HTMLDivElement;
+const arithmeticExpressionDisplay = document.querySelector('[data-visor=accumulator]') as HTMLDivElement;
 const keyNumbers = document.querySelectorAll('[data-number]') as NodeListOf<HTMLButtonElement>;
 const keyOperators = document.querySelectorAll('[data-operator]') as NodeListOf<HTMLButtonElement>;
 const keyComma = document.querySelector('[data-functionality=comma]') as HTMLButtonElement;
@@ -10,44 +10,42 @@ const keyClearElement = document.querySelector('[data-functionality=clear-elemen
 const keyPlusMinus = document.querySelector('[data-functionality=plus-minus]') as HTMLButtonElement;
 const keyEqual = document.querySelector('[data-result=equal]') as HTMLButtonElement;
 
-const maximumDisplayNumber:number = 8;
-const elementsCalculateArray: Array<number | string> = [];
+const maximumDisplaySize = 8;
+const arrayWithMathExpression: Array<number | string> = [];
 
-visorCurrentNumber.innerHTML = '0';
-visorAccumulator.innerHTML = '';
+currentNumberDisplay.innerHTML = '0';
+arithmeticExpressionDisplay.innerHTML = '';
 
-const roundNumber = (value:number, precision:number):number => {
-  const multiplier:number = 10 ** (precision || 0);
+const roundNumber = (value:number, decimalAmount:number):number => {
+  const multiplier = 10 ** (decimalAmount || 0);
   return Math.round(value * multiplier) / multiplier;
 };
 
-const addDisplayFloatNumber = ():void => {
-  if (visorCurrentNumber.innerHTML.indexOf('.')) {
-    const currentNumber:number = +visorCurrentNumber.innerHTML;
-    const floatNumber:number = roundNumber(currentNumber, 3);
-    visorCurrentNumber.innerHTML = `${floatNumber}`;
+const addDisplayFloatNumber = (
+  _currentNumberDisplay: HTMLDivElement,
+  decimalAmount: number,
+): void => {
+  const containerCurrentNumberDisplay = _currentNumberDisplay;
+  const containsDecimalPoint = containerCurrentNumberDisplay.innerHTML.indexOf('.');
+
+  if (containsDecimalPoint) {
+    const currentNumber = +containerCurrentNumberDisplay.innerHTML;
+    const floatNumber = roundNumber(currentNumber, decimalAmount);
+    containerCurrentNumberDisplay.innerHTML = `${floatNumber}`;
   }
 };
 
-const addDisplayNumber = (number: string):void => {
-  const displaySize:boolean = visorCurrentNumber.innerHTML.length < maximumDisplayNumber;
+const addDisplayNumber = (
+  number: string,
+  _currentNumberDisplay: HTMLDivElement,
+  displaySize: number,
+): void => {
+  const containerNumberDisplay = _currentNumberDisplay;
+  const displayIsCorrectSize = containerNumberDisplay.innerHTML.length < displaySize;
 
-  if (displaySize) { visorCurrentNumber.innerHTML += number; }
+  if (displayIsCorrectSize) { containerNumberDisplay.innerHTML += number; }
 
-  addDisplayFloatNumber();
-};
-
-const handleKeyNumber = (event: Event) => {
-  const keyNumber = event.target as HTMLButtonElement;
-  const keyNumberValue:string = keyNumber.value;
-
-  if (visorAccumulator.innerHTML.includes('=')) {
-    visorCurrentNumber.innerHTML = '';
-    visorAccumulator.innerHTML = '';
-    elementsCalculateArray.length = 0;
-  }
-
-  addDisplayNumber(keyNumberValue);
+  addDisplayFloatNumber(containerNumberDisplay, 3);
 };
 
 const updateCalculusArray = (
@@ -88,16 +86,7 @@ const calculateOrder = (
   const secondOrder = arithmeticOperator === '+' || arithmeticOperator === '-';
   const percentage = arithmeticOperator === '%';
 
-  if (firstOrder) {
-    const result = calculate(arithmeticOperator, previousNumber, nextNumber);
-    updateCalculusArray(array, indexArithmeticOperator, result);
-  }
-
-  if (secondOrder) {
-    const result = calculate(arithmeticOperator, previousNumber, nextNumber);
-    updateCalculusArray(array, indexArithmeticOperator, result);
-  }
-  if (percentage) {
+  if (firstOrder || secondOrder || percentage) {
     const result = calculate(arithmeticOperator, previousNumber, nextNumber);
     updateCalculusArray(array, indexArithmeticOperator, result);
   }
@@ -126,88 +115,124 @@ const calculateExpressionArray = (array: Array<string | number>) => {
   return array;
 };
 
-const handleKeyOperator = (event:Event) => {
-  const keyOperator = event.target as HTMLButtonElement;
-  const operator = keyOperator.value;
-  const previousNumber = visorCurrentNumber.innerHTML;
+const cleanAll = (
+  _currentNumberDisplay: HTMLDivElement,
+  _currentArithmeticDisplay: HTMLDivElement,
+  array: Array<string | number>,
+) => {
+  const containerCurrentDisplay = _currentNumberDisplay;
+  const containerArithmeticDisplay = _currentArithmeticDisplay;
+  const arrayArithmetic = array;
+
+  containerCurrentDisplay.innerHTML = '';
+  containerArithmeticDisplay.innerHTML = '';
+  arrayArithmetic.length = 0;
+};
+
+const clearElement = () => {
+  arrayWithMathExpression.pop();
+  console.log(arrayWithMathExpression);
+
+  // if (currentNumberDisplay.innerHTML === '') {
+  //   arrayWithMathExpression.pop();
+  //   const lastElement = arrayWithMathExpression[arrayWithMathExpression.length - 1];
+
+  //   currentNumberDisplay.innerHTML = `${lastElement}`;
+  //   arithmeticExpressionDisplay.innerHTML = `${arrayWithMathExpression}`;
+
+  //   console.log(arrayWithMathExpression);
+  //   console.log(lastElement);
+
+  //   if (arrayWithMathExpression.length === 0) {
+  //     currentNumberDisplay.innerHTML = '';
+  //   }
+  // } else {
+  //   currentNumberDisplay.innerHTML = '';
+  // }
+
+  if (arithmeticExpressionDisplay.innerHTML.includes('=')) {
+    cleanAll(currentNumberDisplay, arithmeticExpressionDisplay, arrayWithMathExpression);
+  }
+};
+
+const addArithmeticOperator = (_arithmeticOperator:string) => {
+  const arithmeticOperator = _arithmeticOperator;
+  const previousNumber = currentNumberDisplay.innerHTML;
 
   if (previousNumber === '') return;
 
-  if (visorAccumulator.innerHTML.includes('=')) {
-    elementsCalculateArray.length = 0;
+  if (arithmeticExpressionDisplay.innerHTML.includes('=')) {
+    arrayWithMathExpression.length = 0;
   }
 
-  elementsCalculateArray.push(parseFloat(previousNumber), operator);
+  arrayWithMathExpression.push(parseFloat(previousNumber), arithmeticOperator);
+  const showArithmeticOperationOnDisplay:string = arrayWithMathExpression.join('');
+  arithmeticExpressionDisplay.innerHTML = showArithmeticOperationOnDisplay;
+  currentNumberDisplay.innerHTML = '';
+};
 
-  const showOperation:string = elementsCalculateArray.join('');
-  visorAccumulator.innerHTML = showOperation;
-  visorCurrentNumber.innerHTML = '';
+const handleKeyNumber = (event: Event) => {
+  const keyNumber = event.target as HTMLButtonElement;
+  const keyNumberValue:string = keyNumber.value;
+
+  if (arithmeticExpressionDisplay.innerHTML.includes('=')) {
+    cleanAll(currentNumberDisplay, arithmeticExpressionDisplay, arrayWithMathExpression);
+  }
+
+  addDisplayNumber(keyNumberValue, currentNumberDisplay, maximumDisplaySize);
+};
+
+const handleKeyOperator = (event: Event) => {
+  const arithmeticOperatorKey = event.target as HTMLButtonElement;
+  const arithmeticOperatorValue = arithmeticOperatorKey.value;
+  addArithmeticOperator(arithmeticOperatorValue);
 };
 
 const handleKeyComma = () => {
-  if (!visorCurrentNumber.innerHTML.includes('.')) { visorCurrentNumber.innerHTML += '.'; }
+  if (!currentNumberDisplay.innerHTML.includes('.')) { currentNumberDisplay.innerHTML += '.'; }
 };
 
 const handleKeyClearAll = () => {
-  visorAccumulator.innerHTML = '';
-  visorCurrentNumber.innerHTML = '0';
+  cleanAll(currentNumberDisplay, arithmeticExpressionDisplay, arrayWithMathExpression);
 };
 
 const handleKeyClearElement = () => {
-  if (visorCurrentNumber.innerHTML === '') {
-    elementsCalculateArray.pop();
-    const lastElement = elementsCalculateArray[elementsCalculateArray.length - 1];
-
-    visorCurrentNumber.innerHTML = `${lastElement}`;
-    visorAccumulator.innerHTML = '';
-
-    if (elementsCalculateArray.length === 0) {
-      visorCurrentNumber.innerHTML = '';
-    }
-  } else {
-    visorCurrentNumber.innerHTML = '';
-  }
-
-  if (visorAccumulator.innerHTML.includes('=')) {
-    visorCurrentNumber.innerHTML = '';
-    visorAccumulator.innerHTML = '';
-    elementsCalculateArray.length = 0;
-  }
+  clearElement();
 };
 
 const handleKeyPlusMinus = ():void => {
-  const isMinus = visorCurrentNumber.innerHTML.includes('-');
-  const addMinus = ():void => { visorCurrentNumber.innerHTML = `-${visorCurrentNumber.innerHTML}`; };
-  const removeMinus = ():void => { visorCurrentNumber.innerHTML = `${visorCurrentNumber.innerHTML.replace('-', '')}`; };
+  const isMinus = currentNumberDisplay.innerHTML.includes('-');
+  const addMinus = ():void => { currentNumberDisplay.innerHTML = `-${currentNumberDisplay.innerHTML}`; };
+  const removeMinus = ():void => { currentNumberDisplay.innerHTML = `${currentNumberDisplay.innerHTML.replace('-', '')}`; };
 
   return isMinus ? removeMinus() : addMinus();
 };
 
 const handleKeyEqual = () => {
-  const previousNumber = visorCurrentNumber.innerHTML;
+  const previousNumber = currentNumberDisplay.innerHTML;
 
   if (previousNumber !== '') {
-    elementsCalculateArray.push(parseFloat(previousNumber));
+    arrayWithMathExpression.push(parseFloat(previousNumber));
   }
 
-  const lastItem = elementsCalculateArray[elementsCalculateArray.length - 1];
+  const lastItem = arrayWithMathExpression[arrayWithMathExpression.length - 1];
   const isNumber = typeof lastItem === 'number';
 
   if (!isNumber) {
-    elementsCalculateArray.pop();
+    arrayWithMathExpression.pop();
   }
 
-  const showArithmeticOperation = `${elementsCalculateArray.join('')}=`;
-  visorAccumulator.innerHTML = showArithmeticOperation;
+  const showArithmeticOperation = `${arrayWithMathExpression.join('')}=`;
+  arithmeticExpressionDisplay.innerHTML = showArithmeticOperation;
 
-  const result = roundNumber(+calculateExpressionArray(elementsCalculateArray).join(), 2);
+  const result = roundNumber(+calculateExpressionArray(arrayWithMathExpression).join(), 2);
 
   console.log(result.toString().length);
 
-  if (result.toString().length > maximumDisplayNumber) {
-    visorCurrentNumber.innerHTML = 'ERROR';
+  if (result.toString().length > maximumDisplaySize) {
+    currentNumberDisplay.innerHTML = 'ERROR';
   } else {
-    visorCurrentNumber.innerHTML = `${result}`;
+    currentNumberDisplay.innerHTML = `${result}`;
   }
 };
 
