@@ -16,166 +16,212 @@ const arrayWithMathExpression: Array<number | string> = [];
 currentNumberDisplay.innerHTML = '0';
 arithmeticExpressionDisplay.innerHTML = '';
 
-const roundNumber = (value:number, decimalAmount:number):number => {
-  const multiplier = 10 ** (decimalAmount || 0);
-  return Math.round(value * multiplier) / multiplier;
+const roundNumber = (_value:number, _decimalAmount:number):number => {
+  const multiplier = 10 ** (_decimalAmount || 0);
+  return Math.round(_value * multiplier) / multiplier;
 };
 
 const addDisplayFloatNumber = (
   _currentNumberDisplay: HTMLDivElement,
-  decimalAmount: number,
+  _decimalAmount: number,
 ): void => {
-  const containerCurrentNumberDisplay = _currentNumberDisplay;
-  const containsDecimalPoint = containerCurrentNumberDisplay.innerHTML.indexOf('.');
+  const elCurrentNumberDisplay = _currentNumberDisplay;
+  const containsDecimalPoint = elCurrentNumberDisplay.innerHTML.indexOf('.');
 
   if (containsDecimalPoint) {
-    const currentNumber = +containerCurrentNumberDisplay.innerHTML;
-    const floatNumber = roundNumber(currentNumber, decimalAmount);
-    containerCurrentNumberDisplay.innerHTML = `${floatNumber}`;
+    const currentNumber = +elCurrentNumberDisplay.innerHTML;
+    const floatNumber = roundNumber(currentNumber, _decimalAmount);
+    elCurrentNumberDisplay.innerHTML = `${floatNumber}`;
   }
 };
 
 const addDisplayNumber = (
-  number: string,
+  _number: string,
   _currentNumberDisplay: HTMLDivElement,
-  displaySize: number,
+  _displaySize: number,
 ): void => {
-  const containerNumberDisplay = _currentNumberDisplay;
-  const displayIsCorrectSize = containerNumberDisplay.innerHTML.length < displaySize;
+  const elNumberDisplay = _currentNumberDisplay;
+  const displayIsCorrectSize = elNumberDisplay.innerHTML.length < _displaySize;
 
-  if (displayIsCorrectSize) { containerNumberDisplay.innerHTML += number; }
+  if (displayIsCorrectSize) { elNumberDisplay.innerHTML += _number; }
 
-  addDisplayFloatNumber(containerNumberDisplay, 3);
+  addDisplayFloatNumber(elNumberDisplay, 3);
 };
 
 const updateCalculusArray = (
-  array: Array<string | number>,
-  indexArithmeticOperator: number,
-  result: number,
+  _arrayWithMathExpression: Array<string | number>,
+  _indexArithmeticOperator: number,
+  _result: number,
 ) => {
-  array.splice(indexArithmeticOperator + 1, 1);
-  array.splice(indexArithmeticOperator - 1, 1);
-  array.splice(indexArithmeticOperator - 1, 1, result);
+  _arrayWithMathExpression.splice(_indexArithmeticOperator + 1, 1);
+  _arrayWithMathExpression.splice(_indexArithmeticOperator - 1, 1);
+  _arrayWithMathExpression.splice(_indexArithmeticOperator - 1, 1, _result);
 };
 
-const calculate = (arithmeticOperator:string, previousNumber:number, nextNumber:number):number => {
-  const calculateMultiplication = +previousNumber * +nextNumber;
-  const calculateDivision = +previousNumber / +nextNumber;
-  const calculateAddition = +previousNumber + +nextNumber;
-  const calculateSubtraction = +previousNumber - +nextNumber;
-  const calculatePercentage = (previousNumber / 100) * nextNumber;
+const calculate = (
+  _arithmeticOperator: string,
+  _previousNumber: number,
+  _nextNumber: number,
+): number => {
+  const calculateMultiplication = +_previousNumber * +_nextNumber;
+  const calculateDivision = +_previousNumber / +_nextNumber;
+  const calculateAddition = +_previousNumber + +_nextNumber;
+  const calculateSubtraction = +_previousNumber - +_nextNumber;
+  const calculatePercentage = (_previousNumber / 100) * _nextNumber;
 
-  if (arithmeticOperator === '*') return calculateMultiplication;
-  if (arithmeticOperator === '/') return calculateDivision;
-  if (arithmeticOperator === '+') return calculateAddition;
-  if (arithmeticOperator === '-') return calculateSubtraction;
-  if (arithmeticOperator === '%') return calculatePercentage;
+  if (_arithmeticOperator === '*') return calculateMultiplication;
+  if (_arithmeticOperator === '/') return calculateDivision;
+  if (_arithmeticOperator === '+') return calculateAddition;
+  if (_arithmeticOperator === '-') return calculateSubtraction;
+  if (_arithmeticOperator === '%') return calculatePercentage;
 
   throw new Error("Shouldn't be reachable");
 };
 
 const calculateOrder = (
-  arithmeticOperator: (string | number),
-  indexArithmeticOperator: number,
-  array: Array<string | number>,
+  _arithmeticOperator: (string | number),
+  _indexArithmeticOperator: number,
+  _arrayWithMathExpression: Array<string | number>,
 ) => {
-  const previousNumber = +array[indexArithmeticOperator - 1];
-  const nextNumber = +array[indexArithmeticOperator + 1];
+  const previousNumber = +_arrayWithMathExpression[_indexArithmeticOperator - 1];
+  const nextNumber = +_arrayWithMathExpression[_indexArithmeticOperator + 1];
 
-  const firstOrder = arithmeticOperator === '*' || arithmeticOperator === '/';
-  const secondOrder = arithmeticOperator === '+' || arithmeticOperator === '-';
-  const percentage = arithmeticOperator === '%';
+  const firstOrder = _arithmeticOperator === '*' || _arithmeticOperator === '/';
+  const secondOrder = _arithmeticOperator === '+' || _arithmeticOperator === '-';
+  const percentage = _arithmeticOperator === '%';
 
   if (firstOrder || secondOrder || percentage) {
-    const result = calculate(arithmeticOperator, previousNumber, nextNumber);
-    updateCalculusArray(array, indexArithmeticOperator, result);
+    const result = calculate(_arithmeticOperator, previousNumber, nextNumber);
+    updateCalculusArray(_arrayWithMathExpression, _indexArithmeticOperator, result);
   }
 };
 
-const orderArithmeticOperators = (array: Array<string | number>) => {
-  const firstOrderArithmeticOperators = array.find((arithmeticOperator) => arithmeticOperator === '*' || arithmeticOperator === '/');
+const orderArithmeticOperators = (_arrayWithMathExpression: Array<string | number>) => {
+  const firstOrderArithmeticOperators = _arrayWithMathExpression.find((arithmeticOperator) => arithmeticOperator === '*' || arithmeticOperator === '/');
 
-  const secondOrderArithmeticOperators = array.find((arithmeticOperator) => arithmeticOperator === '+' || arithmeticOperator === '-');
+  const secondOrderArithmeticOperators = _arrayWithMathExpression.find((arithmeticOperator) => arithmeticOperator === '+' || arithmeticOperator === '-');
 
-  const percentageArithmeticOperator = array.find(((arithmeticOperator) => arithmeticOperator === '%'));
+  const percentageArithmeticOperator = _arrayWithMathExpression.find(((arithmeticOperator) => arithmeticOperator === '%'));
 
   return firstOrderArithmeticOperators
     || secondOrderArithmeticOperators || percentageArithmeticOperator;
 };
 
-const calculateExpressionArray = (array: Array<string | number>) => {
-  const arithmeticOperatorCurrent = orderArithmeticOperators(array);
-  const indexArithmeticOperatorCurrent = (arithmeticOperatorCurrent) ? array.indexOf(arithmeticOperatorCurrent) : '';
+const calculateExpressionArray = (_arrayWithMathExpression: Array<string | number>) => {
+  const arithmeticOperatorCurrent = orderArithmeticOperators(_arrayWithMathExpression);
+  const indexArithmeticOperatorCurrent = (arithmeticOperatorCurrent)
+    ? _arrayWithMathExpression.indexOf(arithmeticOperatorCurrent)
+    : '';
 
   if (arithmeticOperatorCurrent && indexArithmeticOperatorCurrent) {
-    calculateOrder(arithmeticOperatorCurrent, indexArithmeticOperatorCurrent, array);
-    calculateExpressionArray(array);
+    calculateOrder(
+      arithmeticOperatorCurrent,
+      indexArithmeticOperatorCurrent,
+      _arrayWithMathExpression,
+    );
+
+    calculateExpressionArray(_arrayWithMathExpression);
   }
 
-  return array;
+  return _arrayWithMathExpression;
 };
 
 const cleanAll = (
   _currentNumberDisplay: HTMLDivElement,
   _currentArithmeticDisplay: HTMLDivElement,
-  array: Array<string | number>,
+  _arrayWithMathExpression: Array<string | number>,
 ) => {
-  const containerCurrentDisplay = _currentNumberDisplay;
-  const containerArithmeticDisplay = _currentArithmeticDisplay;
-  const arrayArithmetic = array;
+  const elCurrentDisplay = _currentNumberDisplay;
+  const elArithmeticDisplay = _currentArithmeticDisplay;
+  const elArrayArithmeticExpression = _arrayWithMathExpression;
 
-  containerCurrentDisplay.innerHTML = '';
-  containerArithmeticDisplay.innerHTML = '';
-  arrayArithmetic.length = 0;
+  elCurrentDisplay.innerHTML = '';
+  elArithmeticDisplay.innerHTML = '';
+  elArrayArithmeticExpression.length = 0;
 };
 
-const clearElement = () => {
-  arrayWithMathExpression.pop();
-  console.log(arrayWithMathExpression);
+const clearElement = (
+  _arithmeticExpressionDisplay: HTMLDivElement,
+  _currentNumberDisplay: HTMLDivElement,
+  _arrayWithMathExpression: Array<string | number>,
+) => {
+  const elArithmeticExpressionDisplay = _arithmeticExpressionDisplay;
+  const elCurrentNumberDisplay = _currentNumberDisplay;
 
-  // if (currentNumberDisplay.innerHTML === '') {
-  //   arrayWithMathExpression.pop();
-  //   const lastElement = arrayWithMathExpression[arrayWithMathExpression.length - 1];
+  _arrayWithMathExpression.pop();
+  console.log(_arrayWithMathExpression);
 
-  //   currentNumberDisplay.innerHTML = `${lastElement}`;
-  //   arithmeticExpressionDisplay.innerHTML = `${arrayWithMathExpression}`;
+  if (elCurrentNumberDisplay.innerHTML === '') {
+    _arrayWithMathExpression.pop();
+    const lastElement = _arrayWithMathExpression[_arrayWithMathExpression.length - 1];
 
-  //   console.log(arrayWithMathExpression);
-  //   console.log(lastElement);
+    elCurrentNumberDisplay.innerHTML = `${lastElement}`;
+    elArithmeticExpressionDisplay.innerHTML = `${_arrayWithMathExpression.join('')}`;
 
-  //   if (arrayWithMathExpression.length === 0) {
-  //     currentNumberDisplay.innerHTML = '';
-  //   }
-  // } else {
-  //   currentNumberDisplay.innerHTML = '';
-  // }
+    console.log(_arrayWithMathExpression);
+    console.log(lastElement);
 
-  if (arithmeticExpressionDisplay.innerHTML.includes('=')) {
-    cleanAll(currentNumberDisplay, arithmeticExpressionDisplay, arrayWithMathExpression);
+    if (_arrayWithMathExpression.length === 0) {
+      elCurrentNumberDisplay.innerHTML = '';
+    }
+  } else {
+    elCurrentNumberDisplay.innerHTML = '';
+  }
+
+  if (elArithmeticExpressionDisplay.innerHTML.includes('=')) {
+    cleanAll(elCurrentNumberDisplay, elArithmeticExpressionDisplay, _arrayWithMathExpression);
   }
 };
 
-const addArithmeticOperator = (_arithmeticOperator:string) => {
-  const arithmeticOperator = _arithmeticOperator;
-  const previousNumber = currentNumberDisplay.innerHTML;
+const addArithmeticOperator = (
+  _arithmeticOperator: string,
+  _currentNumberDisplay: HTMLDivElement,
+  _arithmeticExpressionDisplay:HTMLDivElement,
+  array:Array<string | number>,
+) => {
+  const previousNumber = _currentNumberDisplay.innerHTML;
+  const elArrayArithmeticExpression = array;
+  const elCurrentNumberDisplay = _currentNumberDisplay;
+  const elArithmeticExpressionDisplay = _arithmeticExpressionDisplay;
 
   if (previousNumber === '') return;
 
-  if (arithmeticExpressionDisplay.innerHTML.includes('=')) {
-    arrayWithMathExpression.length = 0;
-  }
+  const arithmeticExpressionContainsEqualSign = elArrayArithmeticExpression.includes('=');
 
-  arrayWithMathExpression.push(parseFloat(previousNumber), arithmeticOperator);
-  const showArithmeticOperationOnDisplay:string = arrayWithMathExpression.join('');
-  arithmeticExpressionDisplay.innerHTML = showArithmeticOperationOnDisplay;
-  currentNumberDisplay.innerHTML = '';
+  if (arithmeticExpressionContainsEqualSign) elArrayArithmeticExpression.length = 0;
+
+  array.push(parseFloat(previousNumber), _arithmeticOperator);
+
+  const showArithmeticOperationOnDisplay = elArrayArithmeticExpression.join('');
+
+  elArithmeticExpressionDisplay.innerHTML = showArithmeticOperationOnDisplay;
+  elCurrentNumberDisplay.innerHTML = '';
+};
+
+const addDecimalPoint = (_currentNumberDisplay: HTMLDivElement) => {
+  const elCurrentNumberDisplay = _currentNumberDisplay;
+  const currentNumberContainsDecimalPoint = elCurrentNumberDisplay.innerHTML.includes('.');
+
+  if (!currentNumberContainsDecimalPoint) elCurrentNumberDisplay.innerHTML += '.';
+};
+
+const changeNumberSign = (_currentNumberDisplay: HTMLDivElement) => {
+  const elCurrentNumberDisplay = _currentNumberDisplay;
+  const isMinus = _currentNumberDisplay.innerHTML.includes('-');
+
+  const addMinus = () => { elCurrentNumberDisplay.innerHTML = `-${elCurrentNumberDisplay.innerHTML}`; };
+  const removeMinus = () => { elCurrentNumberDisplay.innerHTML = `${elCurrentNumberDisplay.innerHTML.replace('-', '')}`; };
+
+  return isMinus ? removeMinus() : addMinus();
 };
 
 const handleKeyNumber = (event: Event) => {
   const keyNumber = event.target as HTMLButtonElement;
   const keyNumberValue:string = keyNumber.value;
 
-  if (arithmeticExpressionDisplay.innerHTML.includes('=')) {
+  const arithmeticExpressionContainsEqualSign = arithmeticExpressionDisplay.innerHTML.includes('=');
+
+  if (arithmeticExpressionContainsEqualSign) {
     cleanAll(currentNumberDisplay, arithmeticExpressionDisplay, arrayWithMathExpression);
   }
 
@@ -185,11 +231,17 @@ const handleKeyNumber = (event: Event) => {
 const handleKeyOperator = (event: Event) => {
   const arithmeticOperatorKey = event.target as HTMLButtonElement;
   const arithmeticOperatorValue = arithmeticOperatorKey.value;
-  addArithmeticOperator(arithmeticOperatorValue);
+
+  addArithmeticOperator(
+    arithmeticOperatorValue,
+    currentNumberDisplay,
+    arithmeticExpressionDisplay,
+    arrayWithMathExpression,
+  );
 };
 
 const handleKeyComma = () => {
-  if (!currentNumberDisplay.innerHTML.includes('.')) { currentNumberDisplay.innerHTML += '.'; }
+  addDecimalPoint(currentNumberDisplay);
 };
 
 const handleKeyClearAll = () => {
@@ -197,15 +249,11 @@ const handleKeyClearAll = () => {
 };
 
 const handleKeyClearElement = () => {
-  clearElement();
+  clearElement(arithmeticExpressionDisplay, currentNumberDisplay, arrayWithMathExpression);
 };
 
 const handleKeyPlusMinus = ():void => {
-  const isMinus = currentNumberDisplay.innerHTML.includes('-');
-  const addMinus = ():void => { currentNumberDisplay.innerHTML = `-${currentNumberDisplay.innerHTML}`; };
-  const removeMinus = ():void => { currentNumberDisplay.innerHTML = `${currentNumberDisplay.innerHTML.replace('-', '')}`; };
-
-  return isMinus ? removeMinus() : addMinus();
+  changeNumberSign(currentNumberDisplay);
 };
 
 const handleKeyEqual = () => {
