@@ -135,7 +135,7 @@ const cleanAll = (
   const elArithmeticDisplay = _currentArithmeticDisplay;
   const elArrayArithmeticExpression = _arrayWithMathExpression;
 
-  elCurrentDisplay.innerHTML = '';
+  elCurrentDisplay.innerHTML = '0';
   elArithmeticDisplay.innerHTML = '';
   elArrayArithmeticExpression.length = 0;
 };
@@ -147,42 +147,44 @@ const clearElement = (
 ) => {
   const elArithmeticExpressionDisplay = _arithmeticExpressionDisplay;
   const elCurrentNumberDisplay = _currentNumberDisplay;
+  const lastElementArray = _arrayWithMathExpression[_arrayWithMathExpression.length - 1];
+  const lastArrayNumber = _arrayWithMathExpression[_arrayWithMathExpression.length - 2];
 
-  _arrayWithMathExpression.pop();
-  console.log(_arrayWithMathExpression);
-
-  if (elCurrentNumberDisplay.innerHTML === '') {
-    _arrayWithMathExpression.pop();
-    const lastElement = _arrayWithMathExpression[_arrayWithMathExpression.length - 1];
-
-    elCurrentNumberDisplay.innerHTML = `${lastElement}`;
-    elArithmeticExpressionDisplay.innerHTML = `${_arrayWithMathExpression.join('')}`;
-
-    console.log(_arrayWithMathExpression);
-    console.log(lastElement);
-
-    if (_arrayWithMathExpression.length === 0) {
-      elCurrentNumberDisplay.innerHTML = '';
-    }
-  } else {
-    elCurrentNumberDisplay.innerHTML = '';
-  }
+  const lastElementOfArrayIsAOperator = typeof lastElementArray === 'string';
+  const EmptyCurrentNumberDisplay = elCurrentNumberDisplay.innerHTML === '';
 
   if (elArithmeticExpressionDisplay.innerHTML.includes('=')) {
     cleanAll(elCurrentNumberDisplay, elArithmeticExpressionDisplay, _arrayWithMathExpression);
+    return;
   }
+
+  if (lastElementOfArrayIsAOperator && !EmptyCurrentNumberDisplay) {
+    elCurrentNumberDisplay.innerHTML = '';
+    return;
+  }
+
+  if (_arrayWithMathExpression.length === 0) {
+    elCurrentNumberDisplay.innerHTML = '';
+    return;
+  }
+
+  _arrayWithMathExpression.splice(-2, 2);
+
+  elArithmeticExpressionDisplay.innerHTML = `${_arrayWithMathExpression.join('')}`;
+  elCurrentNumberDisplay.innerHTML = `${lastArrayNumber}`;
 };
 
 const addArithmeticOperator = (
   _arithmeticOperator: string,
   _currentNumberDisplay: HTMLDivElement,
   _arithmeticExpressionDisplay:HTMLDivElement,
-  array:Array<string | number>,
+  _arrayArithmeticExpression:Array<string | number>,
 ) => {
   const previousNumber = _currentNumberDisplay.innerHTML;
-  const elArrayArithmeticExpression = array;
+  const elArrayArithmeticExpression = _arrayArithmeticExpression;
   const elCurrentNumberDisplay = _currentNumberDisplay;
   const elArithmeticExpressionDisplay = _arithmeticExpressionDisplay;
+  const lastElementOfArray = _arrayArithmeticExpression[_arrayArithmeticExpression.length - 1];
 
   if (previousNumber === '') return;
 
@@ -190,7 +192,7 @@ const addArithmeticOperator = (
 
   if (arithmeticExpressionContainsEqualSign) elArrayArithmeticExpression.length = 0;
 
-  array.push(parseFloat(previousNumber), _arithmeticOperator);
+  elArrayArithmeticExpression.push(parseFloat(previousNumber), _arithmeticOperator);
 
   const showArithmeticOperationOnDisplay = elArrayArithmeticExpression.join('');
 
@@ -213,6 +215,46 @@ const changeNumberSign = (_currentNumberDisplay: HTMLDivElement) => {
   const removeMinus = () => { elCurrentNumberDisplay.innerHTML = `${elCurrentNumberDisplay.innerHTML.replace('-', '')}`; };
 
   return isMinus ? removeMinus() : addMinus();
+};
+
+const showResultOnDisplay = (
+  _result: number,
+  _resultDisplay: HTMLDivElement,
+  _displaySize: number,
+) => {
+  const elResultDisplay = _resultDisplay;
+  const resultLargerThanDisplaySize = _result.toString().length > _displaySize;
+
+  if (resultLargerThanDisplaySize) elResultDisplay.innerHTML = 'ERROR';
+  else (elResultDisplay.innerHTML = `${_result}`);
+};
+
+const doCalculation = (
+  _previousNumber: string,
+  _arithmeticExpressionDisplay:HTMLDivElement,
+  _arrayArithmeticExpression: Array<string | number>,
+) => {
+  const elArithmeticExpressionDisplay = _arithmeticExpressionDisplay;
+
+  console.log(_arrayArithmeticExpression);
+
+  if (_previousNumber !== '') {
+    _arrayArithmeticExpression.push(parseFloat(_previousNumber));
+  }
+
+  const lastItem = _arrayArithmeticExpression[_arrayArithmeticExpression.length - 1];
+  const isNumber = typeof lastItem === 'number';
+
+  if (!isNumber) {
+    _arrayArithmeticExpression.pop();
+  }
+
+  const showArithmeticOperation = `${_arrayArithmeticExpression.join('')}=`;
+  elArithmeticExpressionDisplay.innerHTML = showArithmeticOperation;
+
+  const result = roundNumber(+calculateExpressionArray(_arrayArithmeticExpression).join(), 2);
+
+  showResultOnDisplay(result, currentNumberDisplay, maximumDisplaySize);
 };
 
 const handleKeyNumber = (event: Event) => {
@@ -259,28 +301,13 @@ const handleKeyPlusMinus = ():void => {
 const handleKeyEqual = () => {
   const previousNumber = currentNumberDisplay.innerHTML;
 
-  if (previousNumber !== '') {
-    arrayWithMathExpression.push(parseFloat(previousNumber));
-  }
-
-  const lastItem = arrayWithMathExpression[arrayWithMathExpression.length - 1];
-  const isNumber = typeof lastItem === 'number';
-
-  if (!isNumber) {
-    arrayWithMathExpression.pop();
-  }
-
-  const showArithmeticOperation = `${arrayWithMathExpression.join('')}=`;
-  arithmeticExpressionDisplay.innerHTML = showArithmeticOperation;
-
-  const result = roundNumber(+calculateExpressionArray(arrayWithMathExpression).join(), 2);
-
-  console.log(result.toString().length);
-
-  if (result.toString().length > maximumDisplaySize) {
-    currentNumberDisplay.innerHTML = 'ERROR';
-  } else {
-    currentNumberDisplay.innerHTML = `${result}`;
+  if (arrayWithMathExpression.length > 1) {
+    doCalculation(
+      previousNumber,
+      arithmeticExpressionDisplay,
+      arrayWithMathExpression,
+    );
+    arrayWithMathExpression.length = 0;
   }
 };
 
