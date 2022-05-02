@@ -9,8 +9,9 @@
         "target": "es6",
         "allowJs": true,
         "lib": [
-            "es2017",
-            "dom"
+            "es6",
+            "dom",
+            "dom.iterable"
         ]
     }
 }
