@@ -2,8 +2,8 @@ import '../sass/style.scss';
 
 const currentNumberDisplay = document.querySelector('[data-visor=current-number]') as HTMLDivElement;
 const arithmeticExpressionDisplay = document.querySelector('[data-visor=accumulator]') as HTMLDivElement;
-const keyNumbers = document.querySelectorAll('[data-number]') as NodeListOf<HTMLButtonElement>;
-const keyOperators = document.querySelectorAll('[data-operator]') as NodeListOf<HTMLButtonElement>;
+const keyNumbers = document.querySelectorAll('[data-number]');
+const keyOperators = document.querySelectorAll('[data-operator]');
 const keyComma = document.querySelector('[data-functionality=comma]') as HTMLButtonElement;
 const keyClearAll = document.querySelector('[data-functionality=clear-all]') as HTMLButtonElement;
 const keyClearElement = document.querySelector('[data-functionality=clear-element]') as HTMLButtonElement;
@@ -21,17 +21,14 @@ const roundNumber = (_value:number, _decimalAmount:number):number => {
   return Math.round(_value * multiplier) / multiplier;
 };
 
-const addDisplayFloatNumber = (
-  _currentNumberDisplay: HTMLDivElement,
-  _decimalAmount: number,
-): void => {
+const limitDecimalPlaces = (_currentNumberDisplay: HTMLDivElement, _decimalAmount: number) => {
   const elCurrentNumberDisplay = _currentNumberDisplay;
   const containsDecimalPoint = elCurrentNumberDisplay.innerHTML.indexOf('.');
 
   if (containsDecimalPoint) {
     const currentNumber = +elCurrentNumberDisplay.innerHTML;
-    const floatNumber = roundNumber(currentNumber, _decimalAmount);
-    elCurrentNumberDisplay.innerHTML = `${floatNumber}`;
+    const roundedDecimalNumber = roundNumber(currentNumber, _decimalAmount);
+    elCurrentNumberDisplay.innerHTML = `${roundedDecimalNumber}`;
   }
 };
 
@@ -45,7 +42,7 @@ const addDisplayNumber = (
 
   if (displayIsCorrectSize) { elNumberDisplay.innerHTML += _number; }
 
-  addDisplayFloatNumber(elNumberDisplay, 3);
+  limitDecimalPlaces(elNumberDisplay, 3);
 };
 
 const updateCalculusArray = (
@@ -184,7 +181,6 @@ const addArithmeticOperator = (
   const elArrayArithmeticExpression = _arrayArithmeticExpression;
   const elCurrentNumberDisplay = _currentNumberDisplay;
   const elArithmeticExpressionDisplay = _arithmeticExpressionDisplay;
-  const lastElementOfArray = _arrayArithmeticExpression[_arrayArithmeticExpression.length - 1];
 
   if (previousNumber === '') return;
 
@@ -235,8 +231,6 @@ const doCalculation = (
   _arrayArithmeticExpression: Array<string | number>,
 ) => {
   const elArithmeticExpressionDisplay = _arithmeticExpressionDisplay;
-
-  console.log(_arrayArithmeticExpression);
 
   if (_previousNumber !== '') {
     _arrayArithmeticExpression.push(parseFloat(_previousNumber));
