@@ -24,6 +24,8 @@ $border-radius: 1rem;
     font-family: $font_family;
     font-weight: bolder;
 
+    transition: all .4s;
+
     &:hover {
       border: 1px solid lighten($color: $color, $amount: 10);
       background-color: lighten($color: $color, $amount: 10);
@@ -32,6 +34,23 @@ $border-radius: 1rem;
     &:active {
       border: 1px solid darken($color: $color, $amount: 5);
       background-color: darken($color: $color, $amount: 5);
+    }
+
+    &.equal {
+      color: lighten($color: $color, $amount: 10);
+      border: 1px solid darken($color: $color, $amount: 20);
+      background-color:  darken($color: $color, $amount: 20);
+
+      &:hover {
+        border: 1px solid darken($color: $color, $amount: 30);
+        background-color: darken($color: $color, $amount: 30);
+      }
+
+      &:active {
+        color: lighten($color: $color, $amount: 20);
+        border: 1px solid darken($color: $color, $amount: 10);
+        background-color: darken($color: $color, $amount: 10);
+      }
     }
   }
 }
@@ -91,9 +110,6 @@ body {
   grid-template-areas:
     'k_functionality k_operators'
     'k_numbers k_operators';
-
-  // background-color: darken($color: $color-primary, $amount: 70);
-  // padding: calc($padding-base * 2);
 }
 
 .keyboard-numbers {
