@@ -161,7 +161,7 @@ const clearElement = (
   }
 
   if (_arrayWithMathExpression.length === 0) {
-    elCurrentNumberDisplay.innerHTML = '';
+    elCurrentNumberDisplay.innerHTML = '0';
     return;
   }
 
