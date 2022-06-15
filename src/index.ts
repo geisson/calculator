@@ -1,4 +1,5 @@
 import '../sass/style.scss';
+import '../index.html';
 
 const currentNumberDisplay = document.querySelector('[data-visor=current-number]') as HTMLDivElement;
 const arithmeticExpressionDisplay = document.querySelector('[data-visor=accumulator]') as HTMLDivElement;

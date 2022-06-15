@@ -9,7 +9,7 @@
     "stylelint-declaration-block-no-ignored-properties",
     "stylelint-group-selectors",
     "stylelint-a11y",
-
+    "@signal-noise/stylelint-scales",
     "stylelint-use-nesting",
     "stylelint-color-format"
   ],
@@ -24,7 +24,9 @@
     "declaration-block-no-duplicate-properties": [
       true,
       {
-        "ignore": ["consecutive-duplicates-with-different-values"]
+        "ignore": [
+          "consecutive-duplicates-with-different-values"
+        ]
       }
     ],
     "declaration-block-no-shorthand-property-overrides": true,
@@ -38,7 +40,11 @@
     "named-grid-areas-no-invalid": true,
     "no-descending-specificity": [
       true,
-      { "ignore": ["selectors-within-list"] }
+      {
+        "ignore": [
+          "selectors-within-list"
+        ]
+      }
     ],
     "no-duplicate-at-import-rules": true,
     "no-duplicate-selectors": true,
@@ -47,7 +53,13 @@
     "no-invalid-double-slash-comments": true,
     "no-invalid-position-at-import-rule": [
       true,
-      { "ignoreAtRules": ["/regex/", "use", "string"] }
+      {
+        "ignoreAtRules": [
+          "/regex/",
+          "use",
+          "string"
+        ]
+      }
     ],
     "no-irregular-whitespace": true,
     "property-no-unknown": true,
@@ -56,7 +68,9 @@
     "selector-type-no-unknown": [
       true,
       {
-        "ignore": ["custom-elements"]
+        "ignore": [
+          "custom-elements"
+        ]
       }
     ],
     "string-no-newline": true,
@@ -64,14 +78,21 @@
     "alpha-value-notation": [
       "percentage",
       {
-        "exceptProperties": ["opacity"]
+        "exceptProperties": [
+          "opacity"
+        ]
       }
     ],
     "at-rule-empty-line-before": [
       "always",
       {
-        "except": ["blockless-after-same-name-blockless", "first-nested"],
-        "ignore": ["after-comment"]
+        "except": [
+          "blockless-after-same-name-blockless",
+          "first-nested"
+        ],
+        "ignore": [
+          "after-comment"
+        ]
       }
     ],
     "at-rule-name-case": "lower",
@@ -91,16 +112,26 @@
     "comment-empty-line-before": [
       "always",
       {
-        "except": ["first-nested"],
-        "ignore": ["stylelint-commands"]
+        "except": [
+          "first-nested"
+        ],
+        "ignore": [
+          "stylelint-commands"
+        ]
       }
     ],
     "comment-whitespace-inside": "always",
     "custom-property-empty-line-before": [
       "always",
       {
-        "except": ["after-custom-property", "first-nested"],
-        "ignore": ["after-comment", "inside-single-line-block"]
+        "except": [
+          "after-custom-property",
+          "first-nested"
+        ],
+        "ignore": [
+          "after-comment",
+          "inside-single-line-block"
+        ]
       }
     ],
     "custom-media-pattern": [
@@ -129,8 +160,14 @@
     "declaration-empty-line-before": [
       "always",
       {
-        "except": ["after-declaration", "first-nested"],
-        "ignore": ["after-comment", "inside-single-line-block"]
+        "except": [
+          "after-declaration",
+          "first-nested"
+        ],
+        "ignore": [
+          "after-comment",
+          "inside-single-line-block"
+        ]
       }
     ],
     "font-family-name-quotes": "always-where-recommended",
@@ -185,8 +222,12 @@
     "rule-empty-line-before": [
       "always-multi-line",
       {
-        "except": ["first-nested"],
-        "ignore": ["after-comment"]
+        "except": [
+          "first-nested"
+        ],
+        "ignore": [
+          "after-comment"
+        ]
       }
     ],
     "selector-attribute-brackets-space-inside": "never",
@@ -213,7 +254,12 @@
     "selector-pseudo-element-colon-notation": "double",
     "selector-type-case": "lower",
     "shorthand-property-no-redundant-values": true,
-    "string-quotes": ["single", { "avoidEscape": true }],
+    "string-quotes": [
+      "single",
+      {
+        "avoidEscape": true
+      }
+    ],
     "unit-case": "lower",
     "value-keyword-case": "lower",
     "value-list-comma-newline-after": "always-multi-line",
@@ -221,10 +267,14 @@
     "value-list-comma-space-before": "never",
     "value-list-max-empty-lines": 0,
     "value-no-vendor-prefix": true,
-
     "scss/at-rule-no-unknown": [
       true,
-      { "ignoreAtRules": ["/regex/", "scale"] }
+      {
+        "ignoreAtRules": [
+          "/regex/",
+          "scale"
+        ]
+      }
     ],
     "scss/dollar-variable-pattern": "$",
     "scss/at-each-key-value-single-line": true,
@@ -235,7 +285,15 @@
     "scss/at-extend-no-missing-placeholder": true,
     "scss/at-function-named-arguments": [
       "always",
-      { "ignore": ["single-argument"], "ignoreFunctions": ["/regex/", "scale"] }
+      {
+        "ignore": [
+          "single-argument"
+        ],
+        "ignoreFunctions": [
+          "/regex/",
+          "scale"
+        ]
+      }
     ],
     "scss/at-function-parentheses-space-before": "never",
     "scss/at-function-pattern": "",
@@ -257,22 +315,40 @@
     "scss/dollar-variable-empty-line-after": [
       "always",
       {
-        "except": ["before-dollar-variable"],
-        "ignore": ["inside-single-line-block"]
+        "except": [
+          "before-dollar-variable"
+        ],
+        "ignore": [
+          "inside-single-line-block"
+        ]
       }
     ],
     "scss/dollar-variable-empty-line-before": [
       "always",
       {
-        "except": ["after-dollar-variable"],
-        "ignore": ["inside-single-line-block"]
+        "except": [
+          "after-dollar-variable"
+        ],
+        "ignore": [
+          "inside-single-line-block"
+        ]
       }
     ],
     "scss/dollar-variable-first-in-block": [
       true,
       {
-        "ignore": ["comments", "imports"],
-        "except": ["root", "at-rule", "function", "mixin", "if-else", "loops"]
+        "ignore": [
+          "comments",
+          "imports"
+        ],
+        "except": [
+          "root",
+          "at-rule",
+          "function",
+          "mixin",
+          "if-else",
+          "loops"
+        ]
       }
     ],
     "scss/dollar-variable-no-missing-interpolation": true,
@@ -281,13 +357,24 @@
     "scss/double-slash-comment-empty-line-before": [
       "always",
       {
-        "ignore": ["between-comments", "stylelint-commands", "inside-block"],
-        "except": ["first-nested", "inside-block"]
+        "ignore": [
+          "between-comments",
+          "stylelint-commands",
+          "inside-block"
+        ],
+        "except": [
+          "first-nested",
+          "inside-block"
+        ]
       }
     ],
     "scss/double-slash-comment-inline": [
       "always",
-      { "ignore": ["stylelint-commands"] }
+      {
+        "ignore": [
+          "stylelint-commands"
+        ]
+      }
     ],
     "scss/double-slash-comment-whitespace-inside": "always",
     "scss/comment-no-empty": true,
@@ -301,7 +388,11 @@
     "scss/map-keys-quotes": null,
     "scss/media-feature-value-dollar-variable": [
       "always",
-      { "ignore": ["keywords"] }
+      {
+        "ignore": [
+          "keywords"
+        ]
+      }
     ],
     "scss/operator-no-newline-after": true,
     "scss/operator-no-newline-before": true,
@@ -310,21 +401,31 @@
     "scss/selector-nest-combinators": "always",
     "scss/selector-no-redundant-nesting-selector": [
       true,
-      { "ignoreKeywords": ["when"] }
+      {
+        "ignoreKeywords": [
+          "when"
+        ]
+      }
     ],
     "scss/selector-no-union-class-name": null,
     "scss/no-dollar-variables": null,
     "scss/no-duplicate-dollar-variables": [
       true,
       {
-        "ignoreInside": ["at-rule", "nested-at-rule"],
-        "ignoreInsideAtRules": ["array", "of", "at-rules"],
+        "ignoreInside": [
+          "at-rule",
+          "nested-at-rule"
+        ],
+        "ignoreInsideAtRules": [
+          "array",
+          "of",
+          "at-rules"
+        ],
         "ignoreDefaults": false
       }
     ],
     "scss/no-duplicate-mixins": true,
     "scss/no-global-function-names": true,
-
     "order/order": [
       {
         "type": "at-rule",
@@ -379,11 +480,17 @@
         },
         {
           "groupName": "Layout",
-          "properties": ["float", "clear"]
+          "properties": [
+            "float",
+            "clear"
+          ]
         },
         {
           "groupName": "Display",
-          "properties": ["display", "table-layout"]
+          "properties": [
+            "display",
+            "table-layout"
+          ]
         },
         {
           "groupName": "Grid",
@@ -508,7 +615,11 @@
         },
         {
           "groupName": "Color",
-          "properties": ["box-shadow", "color", "opacity"]
+          "properties": [
+            "box-shadow",
+            "color",
+            "opacity"
+          ]
         },
         {
           "groupName": "Typographic",
@@ -595,22 +706,21 @@
         "unspecified": "bottom"
       }
     ],
-
     "plugin/declaration-block-no-ignored-properties": true,
     "plugin/stylelint-group-selectors": true,
-
     "csstools/use-nesting": "always",
-
     "color-format/format": {
       "format": "rgb"
     },
-
     "plugin/8-point-grid": {
       "base": 4,
-      "allowlist": ["2px", "1px", "0.0625rem"],
+      "allowlist": [
+        "2px",
+        "1px",
+        "0.0625rem"
+      ],
       "ignorelist": []
     },
-
     "a11y/content-property-no-static-value": true,
     "a11y/font-size-is-readable": true,
     "a11y/line-height-is-vertical-rhythmed": true,
@@ -622,6 +732,126 @@
     "a11y/no-spread-text": true,
     "a11y/no-outline-none": true,
     "a11y/no-text-align-justify": true,
-    "a11y/selector-pseudo-class-focus": true
+    "a11y/selector-pseudo-class-focus": true,
+    "scales/alpha-values": [
+      10,
+      25,
+      50,
+      75,
+      90
+    ],
+    "scales/border-widths": [
+      {
+        "scale": [
+          1,
+          2,
+          4,
+          8
+        ],
+        "units": [
+          "px"
+        ]
+      }
+    ],
+    "scales/font-families": [
+      "Share Tech Mono",
+      "monospace"
+    ],
+    "scales/font-sizes": [
+      {
+        "scale": [
+          1,
+          1.5,
+          2,
+          2.5,
+          3
+        ],
+        "units": [
+          "em",
+          "rem"
+        ]
+      },
+      {
+        "scale": [
+          16,
+          18,
+          24,
+          36
+        ],
+        "units": [
+          "px"
+        ]
+      }
+    ],
+    "scales/font-weights": [
+      400,
+      700
+    ],
+    "scales/line-heights": [
+      1,
+      1.5
+    ],
+    "scales/radii": [
+      {
+        "scale": [
+          2,
+          4,
+          8,
+          16
+        ],
+        "units": [
+          "px"
+        ]
+      }
+    ],
+    "scales/space": [
+      {
+        "scale": [
+          0.5,
+          1,
+          2
+        ],
+        "units": [
+          "em",
+          "rem"
+        ]
+      },
+      {
+        "scale": [
+          4,
+          8,
+          16,
+          24,
+          32,
+          64
+        ],
+        "units": [
+          "px"
+        ]
+      }
+    ],
+    "scales/word-spacings": [
+      {
+        "scale": [
+          -0.1,
+          0.2
+        ],
+        "units": [
+          "rem"
+        ]
+      }
+    ],
+    "scales/z-indices": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ]
   }
 }

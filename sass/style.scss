@@ -1,57 +1,110 @@
-@import url(reset.scss);
+/*
+  PADRÕES BACANAS PARA SE SEGUIR!
+
+  HIERARQUIA VISUAL
+  - existe um esforço consciente em destacas as partes mais importantes da interface.
+  - esta sendo levado em consideração o padrão de leitura em F.
+  - os textos e seus tamanhos, peso e cor levam em consideração a sua importância.
+  - os ícones, seus tamanhos e estilo levam em consideração sua importância
+  - os espaçamentos seguem um padrão para reforçar a hierarquia e facilitar o uso
+
+  ESPAÇAMENTO NEGATIVO
+  - Existe espaço negativo suficiente para facilitar a interpretação da interface.
+    REGRA --------------------------------DESKTOP-----MOBILE
+    margens verticais de uma sessão       64px        24px
+    elementos de uma sessão               32px        16px
+    elementos de um card                  16px        08px
+    elementos dentro do card              8px         04px
+
+  ALINHAMENTOS E GRIDS
+  - elementos de um mesmo grupo estão alinhados uniformemente.
+  - os textos do corpo estão alinhados à esquerda para facilitar a leitura (nunca justificado)
+  - o grid esta sendo usado e respeitado
+    REGRA --------------------------------DESKTOP-----------MOBILE
+    frame                                 1440px X 1024px   375px x 812px
+    colunas                               12                4
+    tipo                                  centralizado      esticado
+    calha                                 32px              16px
+    largura                               70px
+    margem                                                  24px
+
+  PALETA DE CORES
+  - as cores não estão muito saturadas
+  - o contrast esta acima de 4.5.1
+  - são usadas, sempre que possível, cores facilmente reconhecidas para 'sucesso' e 'perigo'
+
+  TIPOGRAFIA
+  - o destaque dos textos, através de tamanho, cor e peso da fonte, segue a ordem:
+    REGRA ---------------------PESO---------------DESKTOP-------MOBILE
+    h1 - títulos               bold               36px          24px
+    h2 - subtítulos            bold               24px          18px
+    corpo                      regular            16px          16px
+    legenda                    regular italic     16px          16px
+
+  ICONOGRAFIA
+  - os ícones seguem um padrão de acordo com seu nível de importância.
+  - os ícones tem o mesmo estilo e de preferência foram retirados da mesma biblioteca.
+  - os ícones refletem seu estado.
+    REGRA ----------------------TAMANHO
+    pequeno                     16px
+    normal                      24px
+    grande                      40px
+*/
+@use 'sass:color';
+
+@import url('reset.scss');
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 
-$color-primary: #ff5959;
-$color-secondary: #676fa3;
-$color-tertiary: #cddeff;
-$color-quaternary: #eef2ff;
+$break-small: 400px;
+$break-medium: 800px;
+$break-large: 1200px;
+$color-primary: rgb(255, 89, 89);
+$color-secondary: rgb(103, 111, 163);
+$color-tertiary: rgb(205, 222, 255);
+$color-quaternary: rgb(238, 242, 255);
 
-$padding-base: 1rem;
-$margin-base: 1rem;
+%button {
+  padding: 16px;
+  border: 1px solid transparent;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 16px;
+  font-weight: 700;
+  transition: all 0.4s;
+}
 
-$font-size: 16px;
-$font-family: 'Share Tech Mono';
+@mixin button-appearance($color) {
+  background-color: $color;
+  border: 1px solid $color;
+  color: color.scale($color:$color, $lightness: -50%);
+  transition: all 0.4s;
 
-$border-radius: 1rem;
+  &:hover,
+  &:focus {
+    background-color: color.scale($color:$color, $lightness: 15%);
+    border: 1px solid color.scale($color:$color, $lightness: 15%);
+  }
 
-@mixin button($font_family, $padding, $color) {
-  .button {
-    color: darken($color: $color, $amount: 40);
-    border: 1px solid $color;
-    background-color: $color;
+  &:active {
+    background-color: color.scale($color:$color, $lightness: -10%);
+    border: 1px solid color.scale($color:$color, $lightness: -10%);
+  }
+}
 
-    padding: $padding;
-    font-family: $font_family;
-    font-weight: bolder;
+@mixin button-appearance-equal($color) {
+  background-color: color.scale($color:$color, $lightness: -25%);
+  border: 1px solid color.scale($color:$color, $lightness: -25%);
+  color: color.scale($color:$color, $lightness: 25%);
 
-    transition: all .4s;
+  &:hover,
+  &:focus {
+    background-color: color.scale($color:$color, $lightness: -40%);
+    border: 1px solid color.scale($color:$color, $lightness: -40%);
+  }
 
-    &:hover {
-      border: 1px solid lighten($color: $color, $amount: 10);
-      background-color: lighten($color: $color, $amount: 10);
-    }
-
-    &:active {
-      border: 1px solid darken($color: $color, $amount: 5);
-      background-color: darken($color: $color, $amount: 5);
-    }
-
-    &.equal {
-      color: lighten($color: $color, $amount: 10);
-      border: 1px solid darken($color: $color, $amount: 20);
-      background-color:  darken($color: $color, $amount: 20);
-
-      &:hover {
-        border: 1px solid darken($color: $color, $amount: 30);
-        background-color: darken($color: $color, $amount: 30);
-      }
-
-      &:active {
-        color: lighten($color: $color, $amount: 20);
-        border: 1px solid darken($color: $color, $amount: 10);
-        background-color: darken($color: $color, $amount: 10);
-      }
-    }
+  &:active {
+    background-color: color.scale($color:$color, $lightness: -50%);
+    border: 1px solid color.scale($color:$color, $lightness: -50%);
+    color: color.scale($color:$color, $lightness: 15%);
   }
 }
 
@@ -61,74 +114,89 @@ $border-radius: 1rem;
 }
 
 body {
-  font-family: $font-family;
-  font-size: $font-size;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 16px;
 }
 
-.container {
-  background: $color-tertiary;
-  width: 100vw;
-  height: 100vh;
-
+.c-container {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  width: 100vw;
+  height: 100vh;
+  background: $color-tertiary;
 }
 
-.content {
+.c-calculator {
+  max-width: 360px;
+  padding: 16px;
   background-color: $color-quaternary;
-  padding: calc($padding-base * 2);
-  max-width: 400px;
+
+  @media (min-width: $break-small) {
+    max-width: 360px;
+    padding: 16px;
+  }
 }
 
-.container-visor {
-  border: none;
+.c-visor {
+  padding: 8px;
   background-color: $color-tertiary;
-  padding: $padding-base;
+  border: none;
+  font-weight: bolder;
   text-align: right;
 
-  font-family: $font-family;
-  font-weight: bolder;
-
-  .visor-current-number {
-    color: darken($color: $color-tertiary, $amount: 50);
-    font-size: calc($font-size * 2.5);
-    height: calc($font-size * 2.5);
+  &__accumulator {
+    height: 24px;
+    color: color.scale($color: $color-tertiary, $lightness: -25%);
+    font-size: 16px;
   }
 
-  .visor-accumulator {
-    color: darken($color: $color-tertiary, $amount: 20);
-    font-size: calc($font-size * 0.75);
-    padding-bottom: calc($padding-base);
-    height: calc($font-size * 0.75);
+  &__current-number {
+    height: 32px;
+    color: color.scale($color: $color-tertiary, $lightness: -50%);
+    font-size: 36px;
   }
 }
 
-.container-keyboard {
+.c-keyboard {
   display: grid;
   grid-template-areas:
     'k_functionality k_operators'
     'k_numbers k_operators';
-}
 
-.keyboard-numbers {
-  grid-area: k_numbers;
+  &__area-numbers {
+    grid-area: k_numbers;
 
-  @include grid-btn(3);
-  @include button($font-family, $padding-base, $color-primary);
-}
+    @include grid-btn($repeat: 3);
+  }
 
-.keyboard-operators {
-  grid-area: k_operators;
+  &__area-operators {
+    grid-area: k_operators;
 
-  @include grid-btn(1);
-  @include button($font-family, $padding-base, $color-secondary);
-}
+    @include grid-btn($repeat: 1);
+  }
 
-.keyboard-functionality {
-  grid-area: k_functionality;
+  &__area-functionality {
+    grid-area: k_functionality;
 
-  @include grid-btn(3);
-  @include button($font-family, $padding-base, $color-secondary);
+    @include grid-btn($repeat: 3);
+  }
+
+  &__button {
+    @extend %button;
+
+    &--number {
+      @include button-appearance($color: $color-primary);
+    }
+
+    &--operator,
+    &--functionality {
+      @include button-appearance($color: $color-secondary);
+    }
+
+    &--equal {
+      @include button-appearance-equal($color: $color-secondary);
+    }
+  }
 }
